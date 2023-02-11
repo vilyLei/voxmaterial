@@ -9,7 +9,7 @@ declare var CoRScene: ICoRScene;
 export default class VoxRuntime {
     constructor() { }
 
-    initialize(interactCallback: () => void, rendererCallback: () => void, uiCallback: () => void = null): void {
+    initialize(interactCallback: () => void, rendererCallback: () => void, commonCallback: () => void = null): void {
 
         let mouseInteractML: ModuleLoader = null;
         let url = "";
@@ -58,8 +58,8 @@ export default class VoxRuntime {
                                             console.log("CoEntity module loaded ...");
                                             new ModuleLoader(1, (): void => {
                                                 console.log("ready to build ui ...");
-                                                if (uiCallback) {
-                                                    uiCallback();
+                                                if (commonCallback) {
+                                                    commonCallback();
                                                 }
                                             }).load(url8);
                                         }).load(url7);
@@ -76,7 +76,7 @@ export default class VoxRuntime {
                 }
             }
         });
-        
+
         if (interactCallback) {
             loader.addLoader(mouseInteractML).load(url0).load(url1);
 

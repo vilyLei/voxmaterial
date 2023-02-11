@@ -15,8 +15,8 @@ import IRenderMaterial from "../../vox/render/IRenderMaterial";
 import { ShaderCode } from "./ShaderCode";
 import { CoEntityLayouter } from "../../common/utils/CoEntityLayouter";
 import { CoGeomDataType, CoDataFormat, CoGeomModelLoader } from "../../common/loaders/CoGeomModelLoader";
-import IRawMesh from "../../vox/mesh/IRawMesh";
 import IDataMesh from "../../vox/mesh/IDataMesh";
+import VoxRuntime from "../../common/VoxRuntime";
 
 declare var CoRenderer: ICoRenderer;
 declare var CoRScene: ICoRScene;
@@ -40,42 +40,21 @@ export class DemoShaderMaterial {
 	initialize(): void {
 
 		console.log("EffectExample::initialize()......");
-
-		let url0 = "static/cospace/engine/renderer/CoRenderer.umd.min.js";
-		let url1 = "static/cospace/engine/rscene/CoRScene.umd.min.js";
-		let url2 = "static/cospace/engine/uiInteract/CoUIInteraction.umd.js";
-		let url3 = "static/cospace/math/CoMath.umd.js";
-		let url4 = "static/cospace/ageom/CoAGeom.umd.js";
-		let url5 = "static/cospace/comesh/CoMesh.umd.js";
-		let url6 = "static/cospace/coentity/CoEntity.umd.js";
-		let url7 = "static/cospace/coMaterial/CoMaterial.umd.js";
-
-		let mouseInteractML = new ModuleLoader(2, (): void => {
-			this.initMouseInteraction();
-		});
-
-		new ModuleLoader(2, (): void => {
-			if (this.isEngineEnabled()) {
-				console.log("engine modules loaded ...");
+		let rt = new VoxRuntime();
+		rt.initialize(
+			(): void => {
+				this.initUserInteract();
+			},
+			(): void => {
 				this.initRenderer();
-				new ModuleLoader(5, (): void => {
-					console.log("ready to build scene objs.");
-					this.initModel();
-				})
-					.load(url3)
-					.load(url4)
-					.load(url5)
-					.load(url6)
-					.load(url7);
+			},
+			(): void => {
+				console.log("ready to build scene objs.");
+				this.initModel();
 			}
-		})
-			.addLoader(mouseInteractML)
-			.load(url0)
-			.load(url1);
-
-		mouseInteractML.load(url2);
+		);
 	}
-	
+
 	private createMesh(model: CoGeomDataType, material: IRenderMaterial): IDataMesh {
 		let vs = model.vertices;
 		let uvs = model.uvsList[0];
@@ -103,7 +82,7 @@ export class DemoShaderMaterial {
 				let trisNumber = ivs.length / 3;
 				CoAGeom.SurfaceNormal.ClacTrisNormal(vs, vs.length, trisNumber, ivs, nvs);
 			}
-			
+
 			let material = CoMaterial.createShaderMaterial("model_shd");
 			material.setFragShaderCode(ShaderCode.frag_body);
 			material.setVtxShaderCode(ShaderCode.vert_body);
@@ -156,7 +135,7 @@ export class DemoShaderMaterial {
 	isEngineEnabled(): boolean {
 		return typeof CoRenderer !== "undefined" && typeof CoRScene !== "undefined";
 	}
-	private initMouseInteraction(): void {
+	private initUserInteract(): void {
 
 		let r = this.m_rscene;
 		if (r != null && this.m_mouseInteraction == null && typeof CoUIInteraction !== "undefined") {
