@@ -1,5 +1,6 @@
 
-import {DemoBase as Demo} from "./demo/DemoBase";
+// import {DemoBase as Demo} from "./demo/DemoBase";
+import {DemoShaderMaterial as Demo} from "./demo/shaderExample/DemoShaderMaterial";
 
 document.title = "Vox Material";
 let ins = new Demo();
