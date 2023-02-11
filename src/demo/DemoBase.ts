@@ -25,10 +25,10 @@ export class DemoBase {
 
     private initEngineModule(): void {
 		// /*
-        // let url = "static/cospace/engine/uiInteract/CoUIInteraction.umd.js";
-        // let mouseInteractML = new ModuleLoader(2, (): void => {
-        // 	this.initUserInteract();
-        // });
+        let url = "static/cospace/engine/uiInteract/CoUIInteraction.umd.js";
+        let mouseInteractML = new ModuleLoader(2, (): void => {
+        	this.initUserInteract();
+        });
 
         let url0 = "static/cospace/engine/renderer/CoRenderer.umd.js";
         let url1 = "static/cospace/engine/rscene/CoRScene.umd.js";
@@ -82,16 +82,16 @@ export class DemoBase {
                 // });
             }
         })
-            // .addLoader(mouseInteractML)
+            .addLoader(mouseInteractML)
             .load(url0)
             .load(url1);
 
-        // mouseInteractML.load(url);
+        mouseInteractML.load(url);
 		//*/
     }
 
 	private initUserInteract(): void {
-		/*
+		// /*
 		let r = this.m_rscene;
 		if (r != null && this.m_interact == null && typeof CoUIInteraction !== "undefined") {
 
@@ -102,19 +102,19 @@ export class DemoBase {
 		//*/
 	}
 	private initRenderer(): void {
-		// if (this.m_rscene == null) {
-		// 	let RendererDevice = CoRScene.RendererDevice;
-		// 	RendererDevice.SHADERCODE_TRACE_ENABLED = false;
-		// 	RendererDevice.VERT_SHADER_PRECISION_GLOBAL_HIGHP_ENABLED = true;
-		// 	RendererDevice.SetWebBodyColor("#888888");
+		if (this.m_rscene == null) {
+			let RendererDevice = CoRScene.RendererDevice;
+			RendererDevice.SHADERCODE_TRACE_ENABLED = false;
+			RendererDevice.VERT_SHADER_PRECISION_GLOBAL_HIGHP_ENABLED = true;
+			RendererDevice.SetWebBodyColor("#888888");
 
-		// 	let rparam = CoRScene.createRendererSceneParam();
-		// 	rparam.setAttriAntialias(!RendererDevice.IsMobileWeb());
-		// 	rparam.setCamPosition(1000.0, 1000.0, 1000.0);
-		// 	rparam.setCamProject(45, 20.0, 9000.0);
-		// 	this.m_rscene = CoRScene.createRendererScene(rparam, 3);
-		// 	this.m_rscene.setClearUint24Color(0x888888);
-		// }
+			let rparam = CoRScene.createRendererSceneParam();
+			rparam.setAttriAntialias(!RendererDevice.IsMobileWeb());
+			rparam.setCamPosition(1000.0, 1000.0, 1000.0);
+			rparam.setCamProject(45, 20.0, 9000.0);
+			this.m_rscene = CoRScene.createRendererScene(rparam, 3);
+			this.m_rscene.setClearUint24Color(0x888888);
+		}
 	}
     
 	private init3DScene(): void {
@@ -126,16 +126,16 @@ export class DemoBase {
         // return typeof CoRenderer !== "undefined" && typeof CoRScene !== "undefined";
     }
     run(): void {
-    //     if (this.m_rscene != null) {
-	// 		if (this.m_interact != null) {
-	// 			this.m_interact.setLookAtPosition(null);
-	// 			this.m_interact.run();
-	// 		}
-	// 		this.m_rscene.run();
-	// 		if (this.m_uiScene != null) {
-	// 			this.m_uiScene.run();
-	// 		}
-	// 	}
+        if (this.m_rscene != null) {
+			if (this.m_interact != null) {
+				this.m_interact.setLookAtPosition(null);
+				this.m_interact.run();
+			}
+			this.m_rscene.run();
+			// if (this.m_uiScene != null) {
+			// 	this.m_uiScene.run();
+			// }
+		}
     }
 }
 
