@@ -1,6 +1,7 @@
 // import IRendererScene from "../vox/scene/IRendererScene";
 // import { ICoRenderer } from "../cospace/voxengine/ICoRenderer";
 // import { ICoRScene } from "../cospace/voxengine/ICoRScene";
+import { ModuleLoader } from "../common/loaders/ModuleLoader";
 
 // declare var CoRenderer: ICoRenderer;
 // declare var CoRScene: ICoRScene;
@@ -17,15 +18,15 @@ export class DemoBase {
 		document.oncontextmenu = function (e) {
 			e.preventDefault();
 		}
-        // this.initEngineModule();
+        this.initEngineModule();
     }
 
     private initEngineModule(): void {
-		/*
-        let url = "static/cospace/engine/uiInteract/CoUIInteraction.umd.js";
-        let mouseInteractML = new ModuleLoader(2, (): void => {
-        	this.initUserInteract();
-        });
+		// /*
+        // let url = "static/cospace/engine/uiInteract/CoUIInteraction.umd.js";
+        // let mouseInteractML = new ModuleLoader(2, (): void => {
+        // 	this.initUserInteract();
+        // });
 
         let url0 = "static/cospace/engine/renderer/CoRenderer.umd.js";
         let url1 = "static/cospace/engine/rscene/CoRScene.umd.js";
@@ -63,8 +64,8 @@ export class DemoBase {
                                         console.log("CoEntity module loaded ...");
                                         new ModuleLoader(1, (): void => {
                                             console.log("ready to build ui ...");
-                                            this.initUIScene();
-                                            this.initUISCObjs();
+                                            // this.initUIScene();
+                                            // this.initUISCObjs();
                                         }).load(url8);
                                     }).load(url7);
                                 }).load(url6);
@@ -79,11 +80,11 @@ export class DemoBase {
                 // });
             }
         })
-            .addLoader(mouseInteractML)
+            // .addLoader(mouseInteractML)
             .load(url0)
             .load(url1);
 
-        mouseInteractML.load(url);
+        // mouseInteractML.load(url);
 		//*/
     }
 
@@ -119,7 +120,7 @@ export class DemoBase {
 		// this.m_rscene.addEntity(axis);
 	}
     isEngineEnabled(): boolean {
-		return false;
+		return true;
         // return typeof CoRenderer !== "undefined" && typeof CoRScene !== "undefined";
     }
     run(): void {
