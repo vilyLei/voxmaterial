@@ -1,16 +1,18 @@
-// import IRendererScene from "../vox/scene/IRendererScene";
-// import { ICoRenderer } from "../cospace/voxengine/ICoRenderer";
-// import { ICoRScene } from "../cospace/voxengine/ICoRScene";
+import IRendererScene from "../vox/scene/IRendererScene";
+import { ICoRenderer } from "../cospace/voxengine/ICoRenderer";
+import { ICoRScene } from "../cospace/voxengine/ICoRScene";
 import { ModuleLoader } from "../common/loaders/ModuleLoader";
+import { ICoUIInteraction } from "../cospace/voxengine/ui/ICoUIInteraction";
+import { IMouseInteraction } from "../cospace/voxengine/ui/IMouseInteraction";
 
-// declare var CoRenderer: ICoRenderer;
-// declare var CoRScene: ICoRScene;
-// declare var CoUIInteraction: ICoUIInteraction;
+declare var CoRenderer: ICoRenderer;
+declare var CoRScene: ICoRScene;
+declare var CoUIInteraction: ICoUIInteraction;
 
 export class DemoBase {
 
-    // private m_rscene: IRendererScene = null;
-	// private m_interact: IMouseInteraction = null;
+    private m_rscene: IRendererScene = null;
+	private m_interact: IMouseInteraction = null;
 
     initialize(): void {
         console.log("DemoBase::initialize() ...");
