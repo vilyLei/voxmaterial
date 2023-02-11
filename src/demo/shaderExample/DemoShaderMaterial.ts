@@ -26,9 +26,6 @@ declare var CoMaterial: ICoMaterial;
 declare var CoEntity: ICoEntity;
 declare var CoAGeom: ICoAGeom;
 
-/**
- * cospace renderer scene
- */
 export class DemoShaderMaterial {
 
 	private m_rscene: IRendererScene = null;
@@ -39,7 +36,7 @@ export class DemoShaderMaterial {
 
 	initialize(): void {
 
-		console.log("EffectExample::initialize()......");
+		console.log("DemoShaderMaterial::initialize()......");
 		let rt = new VoxRuntime();
 		rt.initialize(
 			(): void => {
@@ -152,7 +149,6 @@ export class DemoShaderMaterial {
 		let tex = sc.textureBlock.createImageTex2D(64, 64, false);
 		let img = new Image();
 		img.onload = (evt: any): void => {
-			// this.createColorData(img);
 			tex.setDataFromImage(img, 0, 0, 0, false);
 		};
 		img.src = url;
