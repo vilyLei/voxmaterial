@@ -118,12 +118,11 @@ export class DemoBase {
 	}
     
 	private init3DScene(): void {
-        // let axis = CoRScene.createAxis3DEntity();
-		// this.m_rscene.addEntity(axis);
+        let axis = CoRScene.createAxis3DEntity();
+		this.m_rscene.addEntity(axis);
 	}
     isEngineEnabled(): boolean {
-		return true;
-        // return typeof CoRenderer !== "undefined" && typeof CoRScene !== "undefined";
+        return typeof CoRenderer !== "undefined" && typeof CoRScene !== "undefined";
     }
     run(): void {
         if (this.m_rscene != null) {
