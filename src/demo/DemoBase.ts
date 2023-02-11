@@ -18,10 +18,10 @@ export class DemoBase {
         document.oncontextmenu = function (e) {
             e.preventDefault();
         }
-        this.initEngineModule();
+        this.initSysModule();
     }
 
-    private initEngineModule(): void {
+    private initSysModule(): void {
         let rt = new VoxRuntime();
         rt.initialize(
             (): void => {

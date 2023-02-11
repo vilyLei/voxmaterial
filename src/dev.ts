@@ -1,7 +1,7 @@
 
 import {DemoBase as Demo} from "./demo/DemoBase";
 
-document.title = "Vox Web UI";
+document.title = "Vox Material";
 let demoIns: Demo = new Demo();
 let ins: any = demoIns; function main(): void {
     console.log("------ demo --- init ------");
