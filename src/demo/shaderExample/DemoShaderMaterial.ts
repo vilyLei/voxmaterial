@@ -39,16 +39,9 @@ export class DemoShaderMaterial {
 		console.log("DemoShaderMaterial::initialize()......");
 		let rt = new VoxRuntime();
 		rt.initialize(
-			(): void => {
-				this.initUserInteract();
-			},
-			(): void => {
-				this.initRenderer();
-			},
-			(): void => {
-				console.log("ready to build scene objs.");
-				this.initModel();
-			}
+			(): void => { this.initUserInteract(); },
+			(): void => { this.initRenderer(); },
+			(): void => { this.initModel(); }
 		);
 	}
 
