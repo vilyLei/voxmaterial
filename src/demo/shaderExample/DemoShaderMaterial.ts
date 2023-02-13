@@ -17,6 +17,7 @@ import { CoEntityLayouter } from "../../common/utils/CoEntityLayouter";
 import { CoGeomDataType, CoDataFormat, CoGeomModelLoader } from "../../common/loaders/CoGeomModelLoader";
 import IDataMesh from "../../vox/mesh/IDataMesh";
 import VoxRuntime from "../../common/VoxRuntime";
+import ITransformEntity from "../../vox/entity/ITransformEntity";
 
 declare var CoRenderer: ICoRenderer;
 declare var CoRScene: ICoRScene;
@@ -62,16 +63,31 @@ export class DemoShaderMaterial {
 		mesh.initialize();
 		return mesh
 	}
+	private createEntityWithMaterial(material: IRenderMaterial, model: CoGeomDataType, transform: Float32Array = null): ITransformEntity {
+
+		material.initializeByCodeBuf(true);
+
+		let nvs = model.normals;
+		if (nvs == null) {
+			let vs = model.vertices;
+			let ivs = model.indices;
+			let trisNumber = ivs.length / 3;
+			CoAGeom.SurfaceNormal.ClacTrisNormal(vs, vs.length, trisNumber, ivs, nvs);
+		}
+
+		let mesh = this.createMesh(model, material);
+
+		let matrix4 = CoRScene.createMat4(transform);
+		let entity = CoEntity.createDisplayEntity();
+		entity.setRenderState(CoRScene.RendererState.NONE_CULLFACE_NORMAL_STATE);
+		entity.setMesh(mesh);
+		entity.setMaterial(material);
+		entity.getTransform().setParentMatrix(matrix4);
+		return entity;
+	}
 	protected createEntity(model: CoGeomDataType, transform: Float32Array = null, index: number = 0): void {
 		if (model != null) {
 			console.log("createEntity(), model: ", model);
-			let nvs = model.normals;
-			if (nvs == null) {
-				let vs = model.vertices;
-				let ivs = model.indices;
-				let trisNumber = ivs.length / 3;
-				CoAGeom.SurfaceNormal.ClacTrisNormal(vs, vs.length, trisNumber, ivs, nvs);
-			}
 
 			let material = CoMaterial.createShaderMaterial("model_shd");
 			material.setFragShaderCode(ShaderCode.frag_body);
@@ -80,20 +96,11 @@ export class DemoShaderMaterial {
 			material.setTextureList([
 				this.getTexByUrl("static/assets/metal_01.png")
 			]);
-			material.initializeByCodeBuf(true);
 
-
-			let mesh = this.createMesh(model, material);
-
-			let matrix4 = CoRScene.createMat4(transform);
-			let entity = CoEntity.createDisplayEntity();
-			entity.setRenderState(CoRScene.RendererState.NONE_CULLFACE_NORMAL_STATE);
-			entity.setMesh(mesh);
-			entity.setMaterial(material);
-			entity.getTransform().setParentMatrix(matrix4);
+			let entity = this.createEntityWithMaterial(material, model, transform);
 			this.m_rscene.addEntity(entity);
 
-			this.m_layouter.layoutAppendItem(entity, matrix4);
+			this.m_layouter.layoutAppendItem(entity, CoRScene.createMat4(transform));
 		}
 	}
 	private initModel(): void {
