@@ -6,14 +6,15 @@ import {
 	CoDataFormat,
 	CoGeomDataUnit,
 	CoTextureDataUnit
-} from "../../cospace/app/CoSpaceAppData";
+} from "../../app/CoSpaceAppData";
 
-import { ICoSpaceApp } from "../../cospace/app/ICoSpaceApp";
-import { ICoSpaceAppIns } from "../../cospace/app/ICoSpaceAppIns";
-import { CoModuleLoader } from "./CoModuleLoader";
+import { ICoSpaceApp } from "../../app/ICoSpaceApp";
+import { ICoSpaceAppIns } from "../../app/ICoSpaceAppIns";
+import { CoModuleLoader } from "../utils/CoModuleLoader";
 
 declare var CoSpaceApp: ICoSpaceApp;
-
+interface I_CoDataModule {
+}
 export class CoDataModule {
 	private m_init = true;
 	private m_sysIniting = true;

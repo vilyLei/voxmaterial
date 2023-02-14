@@ -1,31 +1,21 @@
 import IRendererScene from "../../vox/scene/IRendererScene";
 import { IMouseInteraction } from "../../cospace/voxengine/ui/IMouseInteraction";
-import { ICoRenderer } from "../../cospace/voxengine/ICoRenderer";
-import { ICoRScene } from "../../cospace/voxengine/ICoRScene";
-import { ICoMesh } from "../../cospace/voxmesh/ICoMesh";
-import { ICoAGeom } from "../../cospace/ageom/ICoAGeom";
-import { ICoMaterial } from "../../cospace/voxmaterial/ICoMaterial";
-import { ICoEntity } from "../../cospace/voxentity/ICoEntity";
-
-import { ICoUIInteraction } from "../../cospace/voxengine/ui/ICoUIInteraction";
-import { ModuleLoader } from "../../common/loaders/ModuleLoader";
 import IRenderTexture from "../../vox/render/texture/IRenderTexture";
+import ITransformEntity from "../../vox/entity/ITransformEntity";
+import IDataMesh from "../../vox/mesh/IDataMesh";
 
 import IRenderMaterial from "../../vox/render/IRenderMaterial";
 import { ShaderCode } from "./ShaderCode";
 import { CoEntityLayouter } from "../../common/utils/CoEntityLayouter";
-import { CoGeomDataType, CoDataFormat, CoGeomModelLoader } from "../../common/loaders/CoGeomModelLoader";
-import IDataMesh from "../../vox/mesh/IDataMesh";
+import { CoGeomDataType, CoDataFormat, CoGeomModelLoader } from "../../cospace/app/common/CoGeomModelLoader";
 import VoxRuntime from "../../common/VoxRuntime";
-import ITransformEntity from "../../vox/entity/ITransformEntity";
+import { VoxEntity } from "../../cospace/voxentity/VoxEntity";
+import { VoxAGeom } from "../../cospace/ageom/VoxAgeom";
+import { VoxMesh } from "../../cospace/voxmesh/VoxMesh";
+import { RendererDevice, VoxRScene } from "../../cospace/voxengine/VoxRScene";
+import { VoxMaterial } from "../../cospace/voxmaterial/VoxMaterial";
+import { VoxUIInteraction } from "../../cospace/voxengine/ui/VoxUIInteraction";
 
-declare var CoRenderer: ICoRenderer;
-declare var CoRScene: ICoRScene;
-declare var CoUIInteraction: ICoUIInteraction;
-declare var CoMesh: ICoMesh;
-declare var CoMaterial: ICoMaterial;
-declare var CoEntity: ICoEntity;
-declare var CoAGeom: ICoAGeom;
 
 export class DemoShaderMaterial {
 
@@ -52,7 +42,7 @@ export class DemoShaderMaterial {
 		let ivs = model.indices;
 		let nvs = model.normals;
 
-		let mesh = CoMesh.createDataMesh();
+		let mesh = VoxMesh.createDataMesh();
 		mesh.vbWholeDataEnabled = false;
 		mesh.setVS(vs);
 		mesh.setUVS(uvs);
@@ -72,14 +62,15 @@ export class DemoShaderMaterial {
 			let vs = model.vertices;
 			let ivs = model.indices;
 			let trisNumber = ivs.length / 3;
-			CoAGeom.SurfaceNormal.ClacTrisNormal(vs, vs.length, trisNumber, ivs, nvs);
+			VoxAGeom.SurfaceNormal.ClacTrisNormal(vs, vs.length, trisNumber, ivs, nvs);
 		}
 
 		let mesh = this.createMesh(model, material);
 
-		let matrix4 = CoRScene.createMat4(transform);
-		let entity = CoEntity.createDisplayEntity();
-		entity.setRenderState(CoRScene.RendererState.NONE_CULLFACE_NORMAL_STATE);
+		let matrix4 = VoxRScene.createMat4(transform);
+
+		let entity = VoxEntity.createDisplayEntity();
+		entity.setRenderState(VoxRScene.RendererState.NONE_CULLFACE_NORMAL_STATE);
 		entity.setMesh(mesh);
 		entity.setMaterial(material);
 		entity.getTransform().setParentMatrix(matrix4);
@@ -89,7 +80,7 @@ export class DemoShaderMaterial {
 		if (model != null) {
 			console.log("createEntity(), model: ", model);
 
-			let material = CoMaterial.createShaderMaterial("model_shd");
+			let material = VoxMaterial.createShaderMaterial("model_shd");
 			material.setFragShaderCode(ShaderCode.frag_body);
 			material.setVtxShaderCode(ShaderCode.vert_body);
 			material.addUniformDataAt("u_color", new Float32Array([1.0, 1.0, 1.0, 1.0]));
@@ -100,7 +91,7 @@ export class DemoShaderMaterial {
 			let entity = this.createEntityWithMaterial(material, model, transform);
 			this.m_rscene.addEntity(entity);
 
-			this.m_layouter.layoutAppendItem(entity, CoRScene.createMat4(transform));
+			this.m_layouter.layoutAppendItem(entity, VoxRScene.createMat4(transform));
 		}
 	}
 	private initModel(): void {
@@ -118,8 +109,7 @@ export class DemoShaderMaterial {
 			});
 
 		let baseUrl = "static/private/";
-		let url = baseUrl + "obj/base.obj";
-		url = baseUrl + "fbx/base4.fbx";
+		let url = baseUrl + "fbx/base4.fbx";
 		// url = baseUrl + "fbx/hat_ok.fbx";
 		url = baseUrl + "obj/apple_01.obj";
 		// url = baseUrl + "ctm/errorNormal.ctm";
@@ -130,14 +120,14 @@ export class DemoShaderMaterial {
 		this.m_modelLoader.load(urls);
 	}
 	isEngineEnabled(): boolean {
-		return typeof CoRenderer !== "undefined" && typeof CoRScene !== "undefined";
+		return VoxRScene.isEnabled();
 	}
 	private initUserInteract(): void {
 
 		let r = this.m_rscene;
-		if (r != null && this.m_mouseInteraction == null && typeof CoUIInteraction !== "undefined") {
+		if (r != null && this.m_mouseInteraction == null && VoxUIInteraction.isEnabled()) {
 
-			this.m_mouseInteraction = CoUIInteraction.createMouseInteraction();
+			this.m_mouseInteraction = VoxUIInteraction.createMouseInteraction();
 			this.m_mouseInteraction.initialize(this.m_rscene, 0, true);
 			this.m_mouseInteraction.setSyncLookAtEnabled(true);
 		}
@@ -158,18 +148,17 @@ export class DemoShaderMaterial {
 
 		if (this.m_rscene == null) {
 
-			let RendererDevice = CoRenderer.RendererDevice;
 			RendererDevice.SHADERCODE_TRACE_ENABLED = true;
 			RendererDevice.VERT_SHADER_PRECISION_GLOBAL_HIGHP_ENABLED = true;
 			RendererDevice.SetWebBodyColor("black");
 
-			let rparam = CoRScene.createRendererSceneParam();
+			let rparam = VoxRScene.createRendererSceneParam();
 			rparam.setAttriAntialias(!RendererDevice.IsMobileWeb());
 			rparam.setCamPosition(1000.0, 1000.0, 1000.0);
 			rparam.setCamProject(45, 20.0, 9000.0);
-			this.m_rscene = CoRScene.createRendererScene(rparam, 3);
+			this.m_rscene = VoxRScene.createRendererScene(rparam, 3);
 
-			// let axis = CoRScene.createAxis3DEntity();
+			// let axis = VoxRScene.createAxis3DEntity();
 			// this.m_rscene.addEntity(axis);
 		}
 	}

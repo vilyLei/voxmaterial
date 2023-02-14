@@ -1,6 +1,8 @@
-import { CoGeomDataType, CoDataFormat, CoGeomDataUnit } from "../../cospace/app/CoSpaceAppData";
+import { CoGeomDataType, CoDataFormat, CoGeomDataUnit } from "../../app/CoSpaceAppData";
 import { CoDataModule } from "./CoDataModule";
-
+interface I_CoGeomModelLoader {
+	
+}
 class CoGeomModelLoader {
 	private m_coapp = new CoDataModule();
 	private m_loadedCall: (models: CoGeomDataType[], transforms: Float32Array[], format: CoDataFormat) => void = null;

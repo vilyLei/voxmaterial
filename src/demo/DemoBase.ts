@@ -1,11 +1,8 @@
 import IRendererScene from "../vox/scene/IRendererScene";
-import { ICoRScene } from "../cospace/voxengine/ICoRScene";
-import { ICoUIInteraction } from "../cospace/voxengine/ui/ICoUIInteraction";
 import { IMouseInteraction } from "../cospace/voxengine/ui/IMouseInteraction";
 import VoxRuntime from "../common/VoxRuntime";
-
-declare var CoRScene: ICoRScene;
-declare var CoUIInteraction: ICoUIInteraction;
+import { RendererDevice, VoxRScene } from "../cospace/voxengine/VoxRScene";
+import { VoxUIInteraction } from "../cospace/voxengine/ui/VoxUIInteraction";
 
 export class DemoBase {
 
@@ -37,31 +34,31 @@ export class DemoBase {
     private initUserInteract(): void {
 
         let r = this.m_rscene;
-        if (r != null && this.m_interact == null && typeof CoUIInteraction !== "undefined") {
+        if (r != null && this.m_interact == null && VoxUIInteraction.isEnabled()) {
 
-            this.m_interact = CoUIInteraction.createMouseInteraction();
+            this.m_interact = VoxUIInteraction.createMouseInteraction();
             this.m_interact.initialize(this.m_rscene, 0, true);
             this.m_interact.setSyncLookAtEnabled(true);
         }
     }
     private initRenderer(): void {
         if (this.m_rscene == null) {
-            let RendererDevice = CoRScene.RendererDevice;
+            
             RendererDevice.SHADERCODE_TRACE_ENABLED = false;
             RendererDevice.VERT_SHADER_PRECISION_GLOBAL_HIGHP_ENABLED = true;
             RendererDevice.SetWebBodyColor("#888888");
-
-            let rparam = CoRScene.createRendererSceneParam();
+            
+            let rparam = VoxRScene.createRendererSceneParam();
             rparam.setAttriAntialias(!RendererDevice.IsMobileWeb());
             rparam.setCamPosition(1000.0, 1000.0, 1000.0);
             rparam.setCamProject(45, 20.0, 9000.0);
-            this.m_rscene = CoRScene.createRendererScene(rparam, 3);
+            this.m_rscene = VoxRScene.createRendererScene(rparam, 3);
             this.m_rscene.setClearUint24Color(0x888888);
         }
     }
 
     private init3DScene(): void {
-        this.m_rscene.addEntity( CoRScene.createAxis3DEntity() );
+        this.m_rscene.addEntity( VoxRScene.createAxis3DEntity() );
     }
     run(): void {
         if (this.m_rscene != null) {

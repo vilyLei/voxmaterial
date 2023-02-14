@@ -1,7 +1,8 @@
 
-import { ModuleLoader } from "../common/loaders/ModuleLoader";
+import { ModuleLoader } from "../cospace/modules/loaders/ModuleLoader";
 import { ICoRenderer } from "../cospace/voxengine/ICoRenderer";
 import { ICoRScene } from "../cospace/voxengine/ICoRScene";
+import { VoxRScene } from "../cospace/voxengine/VoxRScene";
 
 declare var CoRenderer: ICoRenderer;
 declare var CoRScene: ICoRScene;
@@ -16,10 +17,7 @@ export default class VoxRuntime {
         if (interactCallback) {
             url = "static/cospace/engine/uiInteract/CoUIInteraction.umd.js";
             mouseInteractML = new ModuleLoader(2, (): void => {
-                // this.initUserInteract();
-                // if(interactCallback) {
                 interactCallback();
-                // }
             });
         }
 
@@ -35,6 +33,7 @@ export default class VoxRuntime {
 
         let loader = new ModuleLoader(2, (): void => {
             if (this.isEngineEnabled()) {
+                VoxRScene.initialize();
                 console.log("ready to build render ...");
                 if (rendererCallback) {
                     rendererCallback();
@@ -86,6 +85,6 @@ export default class VoxRuntime {
         }
     }
     isEngineEnabled(): boolean {
-        return typeof CoRenderer !== "undefined" && typeof CoRScene !== "undefined";
+        return VoxRScene.isEnabled();
     }
 }

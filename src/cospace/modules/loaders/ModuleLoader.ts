@@ -1,4 +1,6 @@
 import { PackedLoader } from "./PackedLoader";
+interface I_ModuleLoader {
+}
 class ModuleLoader extends PackedLoader {
 	/**
 	 * @param times 记录总共需要的加载完成操作的响应次数。这个次数可能是由load直接产生，也可能是由于别的地方驱动。
@@ -31,10 +33,8 @@ class ModuleLoader extends PackedLoader {
 		};
 		scriptEle.type = "text/javascript";
 		try {
-			console.log("ModuleLoader::loadedData(), module compile A, url: ", url);
 			scriptEle.innerHTML = data as string;
 			document.head.appendChild(scriptEle);
-			console.log("ModuleLoader::loadedData(), module compile B, url: ", url);
 		} catch (e) {
 			console.error("ModuleLoader::loadedData() apply script ele error.");
 			throw e;
