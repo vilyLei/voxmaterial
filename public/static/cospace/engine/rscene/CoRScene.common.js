@@ -33768,7 +33768,16 @@ class RendererSceneGraph {
     return null;
   }
 
+  getSceneAt(i) {
+    if (i >= 0 && i < this.m_nodes.length) return this.m_nodes[i].getRScene();
+    return null;
+  }
+
   createRendererParam() {
+    return new RendererParam_1.default();
+  }
+
+  createRendererSceneParam() {
     return new RendererParam_1.default();
   }
   /**
@@ -33799,6 +33808,7 @@ class RendererSceneGraph {
       let node = new RendererSceneNode_1.default(sc);
       this.m_nodes.push(node);
       this.m_map.set(sc.getUid(), node);
+      return sc;
     }
 
     return null;
