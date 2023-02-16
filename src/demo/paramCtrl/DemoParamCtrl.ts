@@ -140,7 +140,7 @@ export class DemoParamCtrl {
 
 	private m_uiScene: IVoxUIScene = null;
 	private initUIScene(): void {
-
+		VoxUI.initialize();
 		let uisc = VoxUI.createUIScene(this.m_graph);
 		uisc.texAtlasNearestFilter = true;
 		this.m_uiScene = uisc;
