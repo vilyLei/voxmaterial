@@ -11243,22 +11243,40 @@ function createMaterial(dcr) {
 
 exports.createMaterial = createMaterial;
 
-function createDisplayEntityFromModel(model, material = null, vbWhole = false) {
-  if (material == null) {
+function createDisplayEntityFromModel(model, material = null, texEnabled = true, vbWhole = false) {
+  if (!material) {
     material = new Default3DMaterial_1.default();
-    material.initializeByCodeBuf();
+    material.initializeByCodeBuf(texEnabled);
+  } else {
+    material.initializeByCodeBuf(texEnabled || material.getTextureAt(0) != null);
   }
 
   if (material.getCodeBuf() == null || material.getBufSortFormat() < 0x1) {
     throw Error("the material does not call the initializeByCodeBuf() function. !!!");
   }
 
+  let ivs = model.indices;
+  let vs = model.vertices;
+  let uvs;
+
+  if (model.uvsList) {
+    uvs = model.uvsList[0];
+  } else {
+    uvs = new Float32Array(2 * vs.length / 3);
+  }
+
+  let nvs = model.normals;
+
+  if (nvs && typeof CoAGeom !== "undefined") {
+    CoAGeom.SurfaceNormal.ClacTrisNormal(vs, vs.length, ivs.length / 3, ivs, nvs);
+  }
+
   const dataMesh = new DataMesh_1.default();
   dataMesh.vbWholeDataEnabled = vbWhole;
-  dataMesh.setVS(model.vertices);
-  dataMesh.setUVS(model.uvsList[0]);
-  dataMesh.setNVS(model.normals);
-  dataMesh.setIVS(model.indices);
+  dataMesh.setVS(vs);
+  dataMesh.setUVS(uvs);
+  dataMesh.setNVS(nvs);
+  dataMesh.setIVS(ivs);
   dataMesh.setVtxBufRenderData(material);
   dataMesh.initialize();
   const entity = new DisplayEntity_1.default();

@@ -3,14 +3,10 @@ import { IMouseInteraction } from "../../cospace/voxengine/ui/IMouseInteraction"
 import IRenderTexture from "../../vox/render/texture/IRenderTexture";
 import ITransformEntity from "../../vox/entity/ITransformEntity";
 
-import IRenderMaterial from "../../vox/render/IRenderMaterial";
-import { ShaderCode } from "./ShaderCode";
 import { CoEntityLayouter } from "../../cospace/app/common/CoEntityLayouter";
 import { CoGeomDataType, CoDataFormat, CoGeomModelLoader } from "../../cospace/app/common/CoGeomModelLoader";
-import VoxRuntime from "../../common/VoxRuntime";
-import { VoxEntity } from "../../cospace/voxentity/VoxEntity";
-import { VoxAGeom } from "../../cospace/ageom/VoxAgeom";
-import { RendererDevice, VoxRScene } from "../../cospace/voxengine/VoxRScene";
+
+import { VoxRScene } from "../../cospace/voxengine/VoxRScene";
 import { VoxMaterial } from "../../cospace/voxmaterial/VoxMaterial";
 import { VoxUIInteraction } from "../../cospace/voxengine/ui/VoxUIInteraction";
 import IRendererSceneGraph from "../../vox/scene/IRendererSceneGraph";
@@ -18,6 +14,9 @@ import { IVoxUIScene } from "../../voxui/scene/IVoxUIScene";
 import { CtrlInfo } from "../../voxui/panel/IParamCtrlPanel";
 import { VoxMath } from "../../cospace/math/VoxMath";
 import { VoxUI } from "../../voxui/VoxUI";
+
+import { ShaderCode } from "./ShaderCode";
+import VoxRuntime from "../../common/VoxRuntime";
 
 export class DemoParamCtrl {
 
@@ -40,30 +39,6 @@ export class DemoParamCtrl {
 			(): void => { this.initModel(); }
 		);
 	}
-
-	private createEntityWithMaterial(material: IRenderMaterial, model: CoGeomDataType, transform: Float32Array = null): ITransformEntity {
-
-		material.initializeByCodeBuf(true);
-
-		let nvs = model.normals;
-		if (nvs == null) {
-			let vs = model.vertices;
-			let ivs = model.indices;
-			let trisNumber = ivs.length / 3;
-			VoxAGeom.SurfaceNormal.ClacTrisNormal(vs, vs.length, trisNumber, ivs, nvs);
-		}
-
-		let mesh = VoxRScene.createDataMeshFromModel(model, material);
-
-		let matrix4 = VoxRScene.createMat4(transform);
-
-		let entity = VoxEntity.createDisplayEntity();
-		entity.setRenderState(VoxRScene.RendererState.NONE_CULLFACE_NORMAL_STATE);
-		entity.setMesh(mesh);
-		entity.setMaterial(material);
-		entity.getTransform().setParentMatrix(matrix4);
-		return entity;
-	}
 	private m_dataList: Float32Array[] = [];
 	protected createEntity(model: CoGeomDataType, transform: Float32Array = null, index: number = 0): void {
 
@@ -81,8 +56,12 @@ export class DemoParamCtrl {
 			material.setTextureList([
 				this.getTexByUrl("static/assets/metal_01.png")
 			]);
+			let matrix4 = VoxRScene.createMat4(transform);
+			// let entity = this.createEntityWithMaterial(material, model, transform);
+			let entity = VoxRScene.createDisplayEntityFromModel(model, material);
+			entity.setRenderState(VoxRScene.RendererState.NONE_CULLFACE_NORMAL_STATE);
+			entity.getTransform().setParentMatrix(matrix4);
 
-			let entity = this.createEntityWithMaterial(material, model, transform);
 			this.m_entities.push(entity);
 			this.m_rscene.addEntity(entity);
 
@@ -107,9 +86,7 @@ export class DemoParamCtrl {
 
 		let baseUrl = "static/private/";
 		let url = baseUrl + "fbx/base4.fbx";
-		// url = baseUrl + "fbx/hat_ok.fbx";
 		url = baseUrl + "obj/apple_01.obj";
-		// url = baseUrl + "ctm/errorNormal.ctm";
 
 		this.loadModels([url]);
 	}
@@ -142,15 +119,15 @@ export class DemoParamCtrl {
 		panel.setBGColor(VoxMaterial.createColor4(0.4, 0.4, 0.4));
 		
 		panel.addStatusItem("显示-A", "visible-a", "Yes", "No", true, (info: CtrlInfo): void => {
-			console.log("显示-A", info.flag);
+			// console.log("显示-A", info.flag);
 			entity0.setVisible(info.flag);
 		});
 		panel.addStatusItem("显示-B", "visible-b", "Yes", "No", true, (info: CtrlInfo): void => {
-			console.log("显示-B", info.flag);
+			// console.log("显示-B", info.flag);
 			entity1.setVisible(info.flag);
 		});
 		panel.addProgressItem("缩放-A", "scale", 1.0, (info: CtrlInfo): void => {
-			console.log("缩放-A", info.values[0]);
+			// console.log("缩放-A", info.values[0]);
 			currSV.copyFrom(sv);
 			let s = info.values[0];
 			console.log("xxx s: ", s);
