@@ -29,7 +29,7 @@ export default class VoxRuntime {
         let url5 = "static/cospace/comesh/CoMesh.umd.js";
         let url6 = "static/cospace/cotexture/CoTexture.umd.js";
         let url7 = "static/cospace/coentity/CoEntity.umd.js";
-        let url8 = "static/cospace/coui/CoUI.umd.js";
+        let url8 = "static/cospace/ui/Lib_VoxUI.umd.js";
 
         let loader = new ModuleLoader(2, (): void => {
             if (this.isEngineEnabled()) {
