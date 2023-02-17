@@ -1,11 +1,6 @@
 
 import { ModuleLoader } from "../cospace/modules/loaders/ModuleLoader";
-import { ICoRenderer } from "../cospace/voxengine/ICoRenderer";
-import { ICoRScene } from "../cospace/voxengine/ICoRScene";
 import { VoxRScene } from "../cospace/voxengine/VoxRScene";
-
-declare var CoRenderer: ICoRenderer;
-declare var CoRScene: ICoRScene;
 
 export default class VoxRuntime {
     constructor() { }
@@ -34,29 +29,17 @@ export default class VoxRuntime {
         let loader = new ModuleLoader(2, (): void => {
             if (this.isEngineEnabled()) {
                 VoxRScene.initialize();
-                console.log("ready to build render ...");
+                console.log("ready to build renderer ...");
                 if (rendererCallback) {
                     rendererCallback();
 
                     new ModuleLoader(1, (): void => {
-                        console.log("math module loaded ...");
-
                         new ModuleLoader(1, (): void => {
-                            console.log("ageom module loaded ...");
-
                             new ModuleLoader(1, (): void => {
-                                console.log("CoMaterial module loaded ...");
-
                                 new ModuleLoader(1, (): void => {
-                                    console.log("CoMesh module loaded ...");
-
                                     new ModuleLoader(1, (): void => {
-                                        console.log("CoTexture module loaded ...");
-
                                         new ModuleLoader(1, (): void => {
-                                            console.log("CoEntity module loaded ...");
                                             new ModuleLoader(1, (): void => {
-                                                console.log("ready to build ui ...");
                                                 if (commonCallback) {
                                                     commonCallback();
                                                 }
@@ -67,11 +50,6 @@ export default class VoxRuntime {
                             }).load(url4);
                         }).load(url3);
                     }).load(url2);
-
-                    // this.m_vcoapp = new ViewerCoSApp();
-                    // this.m_vcoapp.initialize((): void => {
-                    // 	this.loadOBJ();
-                    // });
                 }
             }
         });
