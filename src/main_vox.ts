@@ -1,6 +1,7 @@
 
 // import {DemoEmptyRenderScene as Demo} from "./demo/DemoEmptyRenderScene";
-import {DemoMouseInteraction as Demo} from "./demo/DemoMouseInteraction";
+// import {DemoMouseInteraction as Demo} from "./demo/DemoMouseInteraction";
+import {DemoPrimitives as Demo} from "./demo/DemoPrimitives";
 // import {DemoBase as Demo} from "./demo/DemoBase";
 // import {DemoShaderMaterial as Demo} from "./demo/shaderExample/DemoShaderMaterial";
 // import {DemoUIBase as Demo} from "./demo/DemoUIBase";
