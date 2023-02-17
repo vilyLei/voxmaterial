@@ -59,9 +59,7 @@ export class DemoParamCtrl {
 			let matrix4 = VoxRScene.createMat4(transform);
 			// let entity = this.createEntityWithMaterial(material, model, transform);
 			let entity = VoxRScene.createDisplayEntityFromModel(model, material);
-			entity.setRenderState(VoxRScene.RendererState.NONE_CULLFACE_NORMAL_STATE);
-			entity.getTransform().setParentMatrix(matrix4);
-
+			// entity.setRenderState(VoxRScene.RendererState.NONE_CULLFACE_NORMAL_STATE);
 			this.m_entities.push(entity);
 			this.m_rscene.addEntity(entity);
 
@@ -86,7 +84,7 @@ export class DemoParamCtrl {
 
 		let baseUrl = "static/private/";
 		let url = baseUrl + "fbx/base4.fbx";
-		url = baseUrl + "obj/apple_01.obj";
+		// url = baseUrl + "obj/apple_01.obj";
 
 		this.loadModels([url]);
 	}

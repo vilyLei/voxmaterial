@@ -36,13 +36,10 @@ export class DemoShaderMaterial {
 			material.setFragShaderCode(ShaderCode.frag_body);
 			material.setVtxShaderCode(ShaderCode.vert_body);
 			material.addUniformDataAt("u_color", new Float32Array([1.0, 1.0, 1.0, 1.0]));
-			material.setTextureList([
-				this.getTexByUrl("static/assets/metal_01.png")
-			]);
+			material.setTextureList([ this.getTexByUrl("static/assets/metal_01.png") ]);
 
 			let matrix4 = VoxRScene.createMat4(transform);
 			let entity = VoxRScene.createDisplayEntityFromModel(model, material);
-			entity.getTransform().setParentMatrix(matrix4);
 			this.m_rscene.addEntity(entity);
 
 			this.m_layouter.layoutAppendItem(entity, matrix4);
@@ -64,7 +61,7 @@ export class DemoShaderMaterial {
 
 		let baseUrl = "static/private/";
 		let url = baseUrl + "fbx/base4.fbx";
-		url = baseUrl + "obj/apple_01.obj";
+		// url = baseUrl + "obj/apple_01.obj";
 
 		this.loadModels([url]);
 	}
@@ -87,7 +84,7 @@ export class DemoShaderMaterial {
 
 	private getTexByUrl(url: string = ""): IRenderTexture {
 		let sc = this.m_rscene;
-		
+
 		let tex = sc.textureBlock.createImageTex2D(64, 64, false);
 		let img = new Image();
 		img.onload = (evt: any): void => {

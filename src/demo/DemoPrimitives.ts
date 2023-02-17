@@ -10,13 +10,9 @@ import VoxRuntime from "../common/VoxRuntime";
 export class DemoPrimitives {
 
     private m_rscene: IRendererScene = null;
+    constructor() { }
+
     initialize(): void {
-        document.oncontextmenu = function (e) {
-            e.preventDefault();
-        }
-        this.initSysModule();
-    }
-    private initSysModule(): void {
 
         new VoxRuntime().initialize(
             (): void => { this.initMouseInteract(); },
@@ -28,26 +24,25 @@ export class DemoPrimitives {
 
         const mi = VoxUIInteraction.createMouseInteraction();
         mi.initialize(this.m_rscene, 0, true);
-        mi.setAutoRunning( true );
+        mi.setAutoRunning(true);
     }
     private initRenderer(): void {
+
         this.m_rscene = VoxRScene.createRendererScene();
         this.m_rscene.initialize(null);
-
         this.m_rscene.addEntity(VoxRScene.createAxis3DEntity());
     }
-    
-	private getTexByUrl(url: string): IRenderTexture {
-		let sc = this.m_rscene;
-		
-		let tex = sc.textureBlock.createImageTex2D(64, 64, false);
-		let img = new Image();
-		img.onload = (evt: any): void => {
-			tex.setDataFromImage(img);
-		};
-		img.src = url;
-		return tex;
-	}
+
+    private getTexByUrl(url: string): IRenderTexture {
+
+        let tex = this.m_rscene.textureBlock.createImageTex2D(64, 64, false);
+        let img = new Image();
+        img.onload = (evt: any): void => {
+            tex.setDataFromImage(img);
+        };
+        img.src = url;
+        return tex;
+    }
     private init3DScene(): void {
 
         let boxMaterial = VoxMaterial.createDefaultMaterial();
@@ -87,7 +82,6 @@ export class DemoPrimitives {
         this.m_rscene.addEntity(plane);
     }
     run(): void {
-
         if (this.m_rscene != null) {
             this.m_rscene.run();
         }
