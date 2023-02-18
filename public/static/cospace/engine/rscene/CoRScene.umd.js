@@ -15466,11 +15466,11 @@ class TextureBlock {
     return tex;
   }
 
-  createImageTex2D(pw, ph, powerof2Boo = false) {
+  createImageTex2D(w = 64, h = 64, powerof2Boo = false) {
     let tex = this.m_texPool.getTexture(TextureProxyType_1.TextureProxyType.Image);
 
     if (tex == null) {
-      tex = new ImageTextureProxy_1.default(pw, ph, powerof2Boo);
+      tex = new ImageTextureProxy_1.default(w, h, powerof2Boo);
     }
 
     tex.__$setRenderProxy(this.m_renderProxy);

@@ -170,10 +170,10 @@ export class DemoParamCtrl {
 	private getTexByUrl(url: string): IRenderTexture {
 		let sc = this.m_rscene;
 
-		let tex = sc.textureBlock.createImageTex2D(64, 64, false);
+		let tex = sc.textureBlock.createImageTex2D();
 		let img = new Image();
-		img.onload = (evt: any): void => {
-			tex.setDataFromImage(img, 0, 0, 0, false);
+		img.onload = (): void => {
+			tex.setDataFromImage(img);
 		};
 		img.src = url;
 		return tex;
