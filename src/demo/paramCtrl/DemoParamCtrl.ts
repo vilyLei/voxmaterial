@@ -1,18 +1,18 @@
-import IRendererScene from "../../vox/scene/IRendererScene";
-import IRenderTexture from "../../vox/render/texture/IRenderTexture";
-import ITransformEntity from "../../vox/entity/ITransformEntity";
+import IRendererScene from "../../engine/vox/scene/IRendererScene";
+import IRenderTexture from "../../engine/vox/render/texture/IRenderTexture";
+import ITransformEntity from "../../engine/vox/entity/ITransformEntity";
 
-import { CoEntityLayouter } from "../../cospace/app/common/CoEntityLayouter";
-import { CoGeomDataType, CoDataFormat, CoGeomModelLoader } from "../../cospace/app/common/CoGeomModelLoader";
+import { CoEntityLayouter } from "../../engine/cospace/app/common/CoEntityLayouter";
+import { CoGeomDataType, CoDataFormat, CoGeomModelLoader } from "../../engine/cospace/app/common/CoGeomModelLoader";
 
-import { VoxRScene } from "../../cospace/voxengine/VoxRScene";
-import { VoxMaterial } from "../../cospace/voxmaterial/VoxMaterial";
-import { VoxUIInteraction } from "../../cospace/voxengine/ui/VoxUIInteraction";
-import IRendererSceneGraph from "../../vox/scene/IRendererSceneGraph";
-import { IVoxUIScene } from "../../voxui/scene/IVoxUIScene";
-import { CtrlInfo } from "../../voxui/panel/IParamCtrlPanel";
-import { VoxMath } from "../../cospace/math/VoxMath";
-import { VoxUI } from "../../voxui/VoxUI";
+import { VoxRScene } from "../../engine/cospace/voxengine/VoxRScene";
+import { VoxMaterial } from "../../engine/cospace/voxmaterial/VoxMaterial";
+import { VoxUIInteraction } from "../../engine/cospace/voxengine/ui/VoxUIInteraction";
+import IRendererSceneGraph from "../../engine/vox/scene/IRendererSceneGraph";
+import { IVoxUIScene } from "../../engine/voxui/scene/IVoxUIScene";
+import { CtrlInfo } from "../../engine/voxui/panel/IParamCtrlPanel";
+import { VoxMath } from "../../engine/cospace/math/VoxMath";
+import { VoxUI } from "../../engine/voxui/VoxUI";
 
 import { ShaderCode } from "./ShaderCode";
 import VoxModuleShell from "../../common/VoxModuleShell";

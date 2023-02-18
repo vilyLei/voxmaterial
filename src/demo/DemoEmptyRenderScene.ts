@@ -1,5 +1,5 @@
-import IRendererScene from "../vox/scene/IRendererScene";
-import { VoxRScene } from "../cospace/voxengine/VoxRScene";
+import IRendererScene from "../engine/vox/scene/IRendererScene";
+import { VoxRScene } from "../engine/cospace/voxengine/VoxRScene";
 import VoxModuleShell from "../common/VoxModuleShell";
 
 export class DemoEmptyRenderScene {

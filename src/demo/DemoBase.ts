@@ -1,7 +1,7 @@
-import IRendererScene from "../vox/scene/IRendererScene";
+import IRendererScene from "../engine/vox/scene/IRendererScene";
 import VoxModuleShell from "../common/VoxModuleShell";
-import { RendererDevice, VoxRScene } from "../cospace/voxengine/VoxRScene";
-import { VoxUIInteraction } from "../cospace/voxengine/ui/VoxUIInteraction";
+import { RendererDevice, VoxRScene } from "../engine/cospace/voxengine/VoxRScene";
+import { VoxUIInteraction } from "../engine/cospace/voxengine/ui/VoxUIInteraction";
 
 export class DemoBase {
 

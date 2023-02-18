@@ -1,10 +1,10 @@
-import IRendererScene from "../vox/scene/IRendererScene";
-import { VoxRScene } from "../cospace/voxengine/VoxRScene";
-import { VoxUIInteraction } from "../cospace/voxengine/ui/VoxUIInteraction";
-import { VoxEntity } from "../cospace/voxentity/VoxEntity";
-import { VoxMaterial } from "../cospace/voxmaterial/VoxMaterial";
-import { VoxMath } from "../cospace/math/VoxMath";
-import IRenderTexture from "../vox/render/texture/IRenderTexture";
+import IRendererScene from "../engine/vox/scene/IRendererScene";
+import { VoxRScene } from "../engine/cospace/voxengine/VoxRScene";
+import { VoxUIInteraction } from "../engine/cospace/voxengine/ui/VoxUIInteraction";
+import { VoxEntity } from "../engine/cospace/voxentity/VoxEntity";
+import { VoxMaterial } from "../engine/cospace/voxmaterial/VoxMaterial";
+import { VoxMath } from "../engine/cospace/math/VoxMath";
+import IRenderTexture from "../engine/vox/render/texture/IRenderTexture";
 import VoxModuleShell from "../common/VoxModuleShell";
 
 export class DemoPrimitives {

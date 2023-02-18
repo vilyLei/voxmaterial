@@ -1,10 +1,10 @@
-import IRendererScene from "../../vox/scene/IRendererScene";
-import IRenderTexture from "../../vox/render/texture/IRenderTexture";
-import { CoEntityLayouter } from "../../cospace/app/common/CoEntityLayouter";
-import { CoGeomDataType, CoDataFormat, CoGeomModelLoader } from "../../cospace/app/common/CoGeomModelLoader";
-import { RendererDevice, VoxRScene } from "../../cospace/voxengine/VoxRScene";
-import { VoxMaterial } from "../../cospace/voxmaterial/VoxMaterial";
-import { VoxUIInteraction } from "../../cospace/voxengine/ui/VoxUIInteraction";
+import IRendererScene from "../../engine/vox/scene/IRendererScene";
+import IRenderTexture from "../../engine/vox/render/texture/IRenderTexture";
+import { CoEntityLayouter } from "../../engine/cospace/app/common/CoEntityLayouter";
+import { CoGeomDataType, CoDataFormat, CoGeomModelLoader } from "../../engine/cospace/app/common/CoGeomModelLoader";
+import { RendererDevice, VoxRScene } from "../../engine/cospace/voxengine/VoxRScene";
+import { VoxMaterial } from "../../engine/cospace/voxmaterial/VoxMaterial";
+import { VoxUIInteraction } from "../../engine/cospace/voxengine/ui/VoxUIInteraction";
 
 import { ShaderCode } from "./ShaderCode";
 import VoxModuleShell from "../../common/VoxModuleShell";

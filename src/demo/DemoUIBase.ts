@@ -1,14 +1,13 @@
-import IRendererScene from "../vox/scene/IRendererScene";
-import { IMouseInteraction } from "../cospace/voxengine/ui/IMouseInteraction";
-import { IVoxUIScene } from "../voxui/scene/IVoxUIScene";
+import IRendererScene from "../engine/vox/scene/IRendererScene";
+import { IVoxUIScene } from "../engine/voxui/scene/IVoxUIScene";
 
 import VoxModuleShell from "../common/VoxModuleShell";
-import { RendererDevice, VoxRScene } from "../cospace/voxengine/VoxRScene";
-import { VoxUIInteraction } from "../cospace/voxengine/ui/VoxUIInteraction";
-import { VoxMaterial } from "../cospace/voxmaterial/VoxMaterial";
-import IRendererSceneGraph from "../vox/scene/IRendererSceneGraph";
-import { VoxUI } from "../voxui/VoxUI";
-import { VoxMath } from "../cospace/math/VoxMath";
+import { RendererDevice, VoxRScene } from "../engine/cospace/voxengine/VoxRScene";
+import { VoxUIInteraction } from "../engine/cospace/voxengine/ui/VoxUIInteraction";
+import { VoxMaterial } from "../engine/cospace/voxmaterial/VoxMaterial";
+import IRendererSceneGraph from "../engine/vox/scene/IRendererSceneGraph";
+import { VoxUI } from "../engine/voxui/VoxUI";
+import { VoxMath } from "../engine/cospace/math/VoxMath";
 
 export class DemoUIBase {
 
