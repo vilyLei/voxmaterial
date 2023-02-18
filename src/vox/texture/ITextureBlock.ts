@@ -89,9 +89,8 @@ interface ITextureBlock {
      */
     createBytesCubeTex(w: number, h: number): IBytesCubeTexture;
     /**
-     * @param w texture width
-     * @param h texture height
-     * @param powerof2Boo the default value is false
+     * @param w image texture predefined width, the default value is 64 
+     * @param h image texture predefined height, the default value is 64
      */
     createImageCubeTex(w: number, h: number): IImageCubeTexture;
     /**

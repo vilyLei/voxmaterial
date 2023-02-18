@@ -4558,7 +4558,7 @@ class RawCodeShaderBuffer extends ShaderCodeBuffer_1.default {
     return this.m_fragCode;
   }
 
-  setVtxShaderCode(codeStr) {
+  setVertShaderCode(codeStr) {
     this.m_vtxCode = codeStr;
   }
 
@@ -4618,9 +4618,9 @@ class ShaderMaterial extends MaterialBase_1.default {
     this.m_buffer.setFragShaderCode(codeStr);
   }
 
-  setVtxShaderCode(codeStr) {
+  setVertShaderCode(codeStr) {
     this.m_buffer.shaderBuilder = null;
-    this.m_buffer.setVtxShaderCode(codeStr);
+    this.m_buffer.setVertShaderCode(codeStr);
   }
   /**
    * @param           uniform_name        the name of a uniform in the shader.
@@ -7006,7 +7006,6 @@ class MouseEventEntity extends DisplayEntity_1.default {
   constructor(transform = null) {
     super(transform);
     this.m_dispatcher = null;
-    this.uuid = "";
     this.initializeEvent();
   }
 
@@ -11545,7 +11544,7 @@ class DisplayEntity {
      */
 
     this.__$rseFlag = RSEntityFlag_1.default.DEFAULT;
-    this.name = "DisplayEntity";
+    this.uuid = "";
     /**
      * 可见性裁剪是否开启, 如果不开启，则摄像机和遮挡剔除都不会裁剪, 取值于 SpaceCullingMask, 默认只会有摄像机裁剪
      */
@@ -11654,6 +11653,7 @@ class DisplayEntity {
   }
 
   getEvtDispatcher(evtClassType) {
+    if (this.uuid != "") this.m_eventDispatcher.uuid = this.uuid;
     return this.m_eventDispatcher;
   }
 
@@ -12099,7 +12099,7 @@ class DisplayEntity {
           this.__activeMesh(material); //  // for debug
 
 
-          this.m_display.name = this.name;
+          this.m_display.uuid = this.uuid;
         }
       }
     }
@@ -12343,7 +12343,7 @@ class DisplayEntity {
   }
 
   toString() {
-    return "DisplayEntity(name=" + this.name + ",uid = " + this.m_uid + ", rseFlag = " + this.__$rseFlag + ")";
+    return "DisplayEntity(uuid=" + this.uuid + ",uid = " + this.m_uid + ", rseFlag = " + this.__$rseFlag + ")";
   }
 
 }
@@ -15427,8 +15427,8 @@ class TextureBlock {
     }
   }
   /**
-   * 设置当前的渲染器
-   * @param renderProxy 当前的渲染器
+   * 设置当前的渲染器代理
+   * @param renderProxy 当前的渲染器代理
    */
 
 
@@ -15507,11 +15507,11 @@ class TextureBlock {
     return new FloatCubeTextureProxy_1.default(pw, ph);
   }
 
-  createBytesTex(texW, texH) {
+  createBytesTex(w, h) {
     let tex = this.m_texPool.getTexture(TextureProxyType_1.TextureProxyType.Bytes);
 
     if (tex == null) {
-      tex = new BytesTextureProxy_1.default(texW, texH);
+      tex = new BytesTextureProxy_1.default(w, h);
     }
 
     tex.__$setRenderProxy(this.m_renderProxy);
@@ -15519,28 +15519,28 @@ class TextureBlock {
     return tex;
   }
 
-  createBytesCubeTex(texW, texH) {
-    let tex = new BytesCubeTextureProxy_1.default(texW, texH);
+  createBytesCubeTex(w, h) {
+    let tex = new BytesCubeTextureProxy_1.default(w, h);
 
     tex.__$setRenderProxy(this.m_renderProxy);
 
     return tex;
   }
 
-  createImageCubeTex(texW, texH) {
-    let tex = new ImageCubeTextureProxy_1.default(texW, texH);
+  createImageCubeTex(w = 64, h = 64) {
+    let tex = new ImageCubeTextureProxy_1.default(w, h);
 
     tex.__$setRenderProxy(this.m_renderProxy);
 
     return tex;
   }
 
-  createTex3D(texW, texH, depth = 1) {
+  createTex3D(w, h, depth = 1) {
     if (depth < 1) {
       depth = 1;
     }
 
-    let tex = new Texture3DProxy_1.default(texW, texH, depth);
+    let tex = new Texture3DProxy_1.default(w, h, depth);
 
     tex.__$setRenderProxy(this.m_renderProxy);
 
@@ -15569,7 +15569,6 @@ class TextureBlock {
 
     tex.__$setRenderProxy(this.m_renderProxy);
 
-    return tex;
     return tex;
   }
 
@@ -26852,7 +26851,7 @@ class DisplayEntityContainer {
 
     this.__$parent = null;
     this.__$renderer = null;
-    this.name = "DisplayEntityContainer"; // mouse interaction enabled
+    this.uuid = ""; // mouse interaction enabled
 
     this.mouseEnabled = false;
     this.m_entities = [];
@@ -35168,7 +35167,7 @@ class RODisplay {
     this.m_material = null; // 只是持有引用不做任何管理操作
 
     this.m_matFS32 = null;
-    this.name = "RODisplay"; // render yes or no
+    this.uuid = ""; // render yes or no
 
     this.visible = true;
     this.ivsIndex = 0;
@@ -35288,7 +35287,7 @@ class RODisplay {
   }
 
   toString() {
-    return "RODisplay(name=" + this.name + ",uid=" + this.getUid() + ", __$ruid=" + this.__$ruid + ")";
+    return "RODisplay(uuid=" + this.uuid + ",uid=" + this.getUid() + ", __$ruid=" + this.__$ruid + ")";
   }
 
   destroy() {
