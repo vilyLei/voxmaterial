@@ -32,7 +32,7 @@ export class DemoShaderMaterial {
 
 			let material = VoxMaterial.createShaderMaterial("model_shd");
 			material.setFragShaderCode(ShaderCode.frag_body);
-			material.setVtxShaderCode(ShaderCode.vert_body);
+			material.setVertShaderCode(ShaderCode.vert_body);
 			material.addUniformDataAt("u_color", new Float32Array([1.0, 1.0, 1.0, 1.0]));
 			material.setTextureList([this.getTexByUrl("static/assets/metal_01.png")]);
 
