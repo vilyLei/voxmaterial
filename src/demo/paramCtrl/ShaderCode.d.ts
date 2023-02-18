@@ -4,6 +4,6 @@
 /*  Vily(vily313@126.com)                                                  */
 /*                                                                         */
 /***************************************************************************/
-import IShaderCodeObject from "../../vox/material/IShaderCodeObject";
+import IShaderCodeObject from "../../engine/vox/material/IShaderCodeObject";
 
 export const ShaderCode:IShaderCodeObject;
