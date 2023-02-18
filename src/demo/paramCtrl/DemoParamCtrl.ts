@@ -1,5 +1,4 @@
 import IRendererScene from "../../vox/scene/IRendererScene";
-import { IMouseInteraction } from "../../cospace/voxengine/ui/IMouseInteraction";
 import IRenderTexture from "../../vox/render/texture/IRenderTexture";
 import ITransformEntity from "../../vox/entity/ITransformEntity";
 
@@ -22,7 +21,6 @@ export class DemoParamCtrl {
 
 	private m_graph: IRendererSceneGraph = null;
 	private m_rscene: IRendererScene = null;
-	private m_mouseInteraction: IMouseInteraction = null;
 	private m_modelLoader = new CoGeomModelLoader();
 	private m_layouter = new CoEntityLayouter();
 	private m_entities: ITransformEntity[] = [];
@@ -82,9 +80,10 @@ export class DemoParamCtrl {
 				this.initUI();
 			});
 
-		let baseUrl = "static/private/";
+		let baseUrl = "static/assets/";
 		let url = baseUrl + "fbx/base4.fbx";
-		// url = baseUrl + "obj/apple_01.obj";
+		// url = baseUrl + "obj/apple.obj";
+		url = baseUrl + "fbx/mat_ball.fbx";
 
 		this.loadModels([url]);
 	}
@@ -111,11 +110,14 @@ export class DemoParamCtrl {
 
 		let ls = this.m_entities;
 		let entity0 = ls[0];
-		let entity1 = ls[1];
+		let entity1 = ls.length > 1 ? ls[1] : ls[0];
+		let dls = this.m_dataList;
+		let fs0 = dls[0];
+		let fs1 = dls.length > 1 ? dls[1] : dls[0];
 		entity0.getScaleXYZ(sv);
-		
+
 		panel.setBGColor(VoxMaterial.createColor4(0.4, 0.4, 0.4));
-		
+
 		panel.addStatusItem("显示-A", "visible-a", "Yes", "No", true, (info: CtrlInfo): void => {
 			// console.log("显示-A", info.flag);
 			entity0.setVisible(info.flag);
@@ -146,14 +148,14 @@ export class DemoParamCtrl {
 		panel.addValueItem("颜色-A", "color-a", 0.8, 0.0, 10, (info: CtrlInfo): void => {
 			let values = info.values;
 			console.log("颜色-A, color-a values: ", values, ", colorPick: ", info.colorPick);
-			let fs = this.m_dataList[0];
+			let fs = fs0;
 			fs[0] = values[0]; fs[1] = values[1]; fs[2] = values[2];
 		}, true);
 
 		panel.addValueItem("颜色-B", "color-b", 0.6, 0.0, 2.0, (info: CtrlInfo): void => {
 			let values = info.values;
 			console.log("color-b, values: ", values, ", colorPick: ", info.colorPick);
-			let fs = this.m_dataList[1];
+			let fs = fs1;
 			fs[0] = values[0]; fs[1] = values[1]; fs[2] = values[2];
 		}, true);
 
@@ -165,13 +167,9 @@ export class DemoParamCtrl {
 	}
 	private initUserInteract(): void {
 
-		let r = this.m_rscene;
-		if (r != null && this.m_mouseInteraction == null && VoxUIInteraction.isEnabled()) {
-
-			this.m_mouseInteraction = VoxUIInteraction.createMouseInteraction();
-			this.m_mouseInteraction.initialize(this.m_rscene, 0, true);
-			this.m_mouseInteraction.setSyncLookAtEnabled(true);
-		}
+		let mi = VoxUIInteraction.createMouseInteraction();
+		mi.initialize(this.m_rscene, 0, true);
+		mi.setAutoRunning(true);
 	}
 
 	private getTexByUrl(url: string = ""): IRenderTexture {
@@ -204,10 +202,6 @@ export class DemoParamCtrl {
 	}
 	run(): void {
 		if (this.m_graph != null) {
-			if (this.m_mouseInteraction != null) {
-				this.m_mouseInteraction.setLookAtPosition(null);
-				this.m_mouseInteraction.run();
-			}
 			this.m_graph.run();
 		}
 	}

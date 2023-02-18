@@ -12,50 +12,49 @@ import { VoxMath } from "../cospace/math/VoxMath";
 
 export class DemoUIBase {
 
-    private m_graph: IRendererSceneGraph = null;
-    private m_rscene: IRendererScene = null;
-	private m_interact: IMouseInteraction = null;
+	private m_graph: IRendererSceneGraph = null;
+	private m_rscene: IRendererScene = null;
 
-    initialize(): void {
-        console.log("DemoUIBase::initialize() ...");
-        
+	initialize(): void {
+		console.log("DemoUIBase::initialize() ...");
+
 		document.oncontextmenu = function (e) {
 			e.preventDefault();
 		}
 		this.initSysModule();
-    }
+	}
 
-    private initSysModule(): void {
-        let rt = new VoxRuntime();
-        rt.initialize(
-            (): void => {
-                this.initUserInteract();
-            },
-            (): void => {
-                this.initRenderer();
-                this.init3DScene();
-            },
-            (): void => {
+	private initSysModule(): void {
+		let rt = new VoxRuntime();
+		rt.initialize(
+			(): void => {
+				this.initUserInteract();
+			},
+			(): void => {
+				this.initRenderer();
+				this.init3DScene();
+			},
+			(): void => {
 				this.initUIScene();
 				this.initUIObjs();
 			}
-        );
-    }
+		);
+	}
 	private m_uiScene: IVoxUIScene = null;
 	private initUIScene(): void {
 		let uisc = VoxUI.createUIScene(this.m_graph);
 		console.log("create the VoxUIScene instance...");
-		
+
 		uisc.texAtlasNearestFilter = true;
 		this.m_uiScene = uisc;
 		uisc.initialize(this.m_graph, 512);
 		console.log("uisc: ", uisc);
-		console.log("uisc.rscene: ", uisc.rscene);	
+		console.log("uisc.rscene: ", uisc.rscene);
 	}
-    private initUIObjs(): void {
-        // this.test01();
-        this.test02();
-    }
+	private initUIObjs(): void {
+		// this.test01();
+		this.test02();
+	}
 	private test01(): void {
 		console.log("test01()................");
 
@@ -67,14 +66,14 @@ export class DemoUIBase {
 
 		let ta = texAtlas;
 		let tta = transparentTexAtlas;
-		let fontColor = VoxMaterial.createColor4(0,1,0,1);
-		let bgColor = VoxMaterial.createColor4(1,1,1,0);
+		let fontColor = VoxMaterial.createColor4(0, 1, 0, 1);
+		let bgColor = VoxMaterial.createColor4(1, 1, 1, 0);
 		urls = ["BBB-0", "BBB-1", "BBB-2", "BBB-3"];
-		img = tta.createCharsCanvasFixSize(90, 40, urls[0], 30, fontColor,bgColor);
+		img = tta.createCharsCanvasFixSize(90, 40, urls[0], 30, fontColor, bgColor);
 		tta.addImageToAtlas(urls[0], img);
-		img = tta.createCharsCanvasFixSize(90, 40, urls[1], 30, fontColor,bgColor);
+		img = tta.createCharsCanvasFixSize(90, 40, urls[1], 30, fontColor, bgColor);
 		tta.addImageToAtlas(urls[1], img);
-		
+
 		// let iconLable = new ClipLabel();
 		let iconLable = VoxUI.createClipLabel();
 		iconLable.transparent = true;
@@ -97,7 +96,7 @@ export class DemoUIBase {
 
 		let ta = texAtlas;
 		let tta = transparentTexAtlas;
-		
+
 		///*
 		// let colorLabel = new ColorLabel();
 		// colorLabel.initialize(200, 130);
@@ -125,7 +124,7 @@ export class DemoUIBase {
 		let bgColor = VoxMaterial.createColor4(1, 1, 1, 0);
 		console.log("create file label...");
 		urls = ["File", "Global", "Color", "BBB-3"];
-		for(let i = 0; i < urls.length; ++i) {
+		for (let i = 0; i < urls.length; ++i) {
 			img = tta.createCharsCanvasFixSize(pw, ph, urls[i], 20, fontColor, bgColor);
 			tta.addImageToAtlas(urls[i], img);
 		}
@@ -139,7 +138,7 @@ export class DemoUIBase {
 		// iconLable.setScaleXY(1.5, 1.5);
 		// iconLable.update();
 		// this.m_uiScene.addEntity(iconLable);
-        
+
 		let colorBtn2 = VoxUI.createButton();
 		colorBtn2.syncLabelClip = false;
 		colorBtn2.addLabel(iconLable);
@@ -149,9 +148,9 @@ export class DemoUIBase {
 		// console.log("XXXXX ipx: ", ipx);
 		colorBtn2.setXY(ipx, 70);
 		colorBtn2.update();
-		
+
 		let pv = VoxMath.createVec3();
-		console.log("VoxMath.MathConst.MATH_1_OVER_PI: ",  VoxMath.MathConst.MATH_1_OVER_PI );
+		console.log("VoxMath.MathConst.MATH_1_OVER_PI: ", VoxMath.MathConst.MATH_1_OVER_PI);
 		console.log("XXXXX iconLable.getX(): ", iconLable.getX());
 		iconLable.getPosition(pv);
 		console.log("XXXXX iconLable A pv: ", pv);
@@ -167,24 +166,19 @@ export class DemoUIBase {
 		//*/
 	}
 	private initUserInteract(): void {
-
-		let r = this.m_rscene;
-		if (r != null && this.m_interact == null && typeof VoxUIInteraction !== "undefined") {
-
-			this.m_interact = VoxUIInteraction.createMouseInteraction();
-			this.m_interact.initialize(this.m_rscene, 0, true);
-			this.m_interact.setSyncLookAtEnabled(true);            
-		}
+		let mi = VoxUIInteraction.createMouseInteraction();
+		mi.initialize(this.m_rscene, 0, true);
+		mi.setAutoRunning(true);
 	}
 	private initRenderer(): void {
 		if (this.m_graph == null) {
-			
+
 			let RD = VoxRScene.RendererDevice;
 			RD.SHADERCODE_TRACE_ENABLED = false;
 			RD.VERT_SHADER_PRECISION_GLOBAL_HIGHP_ENABLED = true;
 			RD.SetWebBodyColor("#888888");
 
-            let graph = this.m_graph = VoxRScene.createRendererSceneGraph();
+			let graph = this.m_graph = VoxRScene.createRendererSceneGraph();
 			let rparam = graph.createRendererSceneParam();
 			rparam.setAttriAntialias(!RD.IsMobileWeb());
 			rparam.setCamPosition(1000.0, 1000.0, 1000.0);
@@ -193,20 +187,16 @@ export class DemoUIBase {
 			this.m_rscene.setClearUint24Color(0x888888);
 		}
 	}
-    
+
 	private init3DScene(): void {
-        let axis = VoxRScene.createAxis3DEntity();
+		let axis = VoxRScene.createAxis3DEntity();
 		this.m_rscene.addEntity(axis);
 	}
-    run(): void {
-        if (this.m_graph != null) {
-			if (this.m_interact != null) {
-				this.m_interact.setLookAtPosition(null);
-				this.m_interact.run();
-			}
+	run(): void {
+		if (this.m_graph != null) {
 			this.m_graph.run();
 		}
-    }
+	}
 }
 
 export default DemoUIBase;

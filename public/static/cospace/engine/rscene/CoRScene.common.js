@@ -2929,7 +2929,9 @@ class MaterialBase {
     this.m_sharedUniforms = null;
     this.m_shaderUniformData = null;
     this.m_pipeLine = null;
-    this.m_uniqueShaderName = ""; // tex list unique hash value
+    this.m_uniqueShaderName = ""; // sub rendering pass
+
+    this.m_cases = null; // tex list unique hash value
 
     this.__$troMid = -1;
     this.__$uniform = null;
@@ -2938,10 +2940,21 @@ class MaterialBase {
      */
 
     this.pipeTypes = null;
+    this.renderState = 0;
+    this.multiPass = false;
     this.m_texList = null;
     this.m_texListLen = 0;
     this.m_texDataEnabled = false;
     this.m_attachCount = 0;
+  } // for multi - pass
+
+
+  setCases(ls) {
+    this.m_cases = ls;
+  }
+
+  getCases() {
+    return this.m_cases;
   }
   /*
    * specifies the scale factors and units to calculate depth values.
@@ -2989,13 +3002,8 @@ class MaterialBase {
   }
 
   hasShaderData() {
-    if (this.m_shdData != null) {
-      return this.m_shdData.haveTexture() ? this.texDataEnabled() : true; // if (this.m_shdData.haveTexture()) {
-      //     return this.texDataEnabled();
-      // }
-      // else {
-      //     return true;
-      // }
+    if (this.m_shdData) {
+      return this.m_shdData.haveTexture() ? this.texDataEnabled() : true;
     }
 
     return false;
@@ -3011,7 +3019,7 @@ class MaterialBase {
     if (this.m_shdData == null) {
       let buf = this.getCodeBuf();
 
-      if (buf != null) {
+      if (buf) {
         buf.reset();
         buf.pipeline = this.m_pipeLine;
         buf.pipeTypes = this.pipeTypes;
@@ -4576,6 +4584,7 @@ class ShaderMaterial extends MaterialBase_1.default {
     this.m_buffer = new RawCodeShaderBuffer();
     this.m_uniformData = null;
     this.m_shaderBuilder = null;
+    this.m_map = new Map();
     this.vertColorEnabled = false;
     this.premultiplyAlpha = false;
     this.shadowReceiveEnabled = false;
@@ -4620,7 +4629,7 @@ class ShaderMaterial extends MaterialBase_1.default {
 
 
   addUniformDataAt(uniform_name, data) {
-    if (data != null) {
+    if (data != null && uniform_name != "") {
       if (this.m_uniformData == null) {
         this.m_uniformData = new ShaderUniformData_1.default();
         this.m_uniformData.uniformNameList = [];
@@ -4629,7 +4638,13 @@ class ShaderMaterial extends MaterialBase_1.default {
 
       this.m_uniformData.uniformNameList.push(uniform_name);
       this.m_uniformData.dataList.push(data);
+      this.m_map.set(uniform_name, data);
     }
+  }
+
+  getUniformDataAt(uniform_name) {
+    if (this.m_map.has(uniform_name)) return this.m_map.get(uniform_name);
+    return null;
   }
 
   getCodeBuf() {
@@ -20601,13 +20616,25 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 class Stencil {
-  constructor(rstate) {
+  constructor(rstate = null) {
     this.m_rstate = null;
+    this.m_depfs = [0, 0];
+    this.m_maskfs = [0, 0];
+    this.m_funcfs = [0, 0, 0, 0];
+    this.m_opfs = [0, 0, 0, 0];
+    this.m_enabled = false;
     this.m_rstate = rstate;
   }
 
+  isEnabled() {
+    return this.m_enabled;
+  }
+
   setDepthTestEnable(enable) {
-    this.m_rstate.setDepthTestEnable(enable);
+    this.m_depfs[0] = enable ? 1 : 0;
+    this.m_depfs[1] = 1;
+    this.m_enabled = true;
+    if (this.m_rstate) this.m_rstate.setDepthTestEnable(enable);
   }
   /**
    * 设置 gpu stencilFunc 状态
@@ -20618,7 +20645,13 @@ class Stencil {
 
 
   setStencilFunc(func, ref, mask) {
-    this.m_rstate.setStencilFunc(func, ref, mask);
+    const ls = this.m_funcfs;
+    ls[0] = func;
+    ls[1] = ref;
+    ls[2] = mask;
+    ls[3] = 1;
+    this.m_enabled = true;
+    if (this.m_rstate) this.m_rstate.setStencilFunc(func, ref, mask);
   }
   /**
    * 设置 gpu stencilMask 状态
@@ -20627,7 +20660,10 @@ class Stencil {
 
 
   setStencilMask(mask) {
-    this.m_rstate.setStencilMask(mask);
+    this.m_maskfs[0] = mask;
+    this.m_maskfs[1] = 1;
+    this.m_enabled = true;
+    if (this.m_rstate) this.m_rstate.setStencilMask(mask);
   }
   /**
    * 设置 gpu stencilOp 状态
@@ -20638,7 +20674,45 @@ class Stencil {
 
 
   setStencilOp(fail, zfail, zpass) {
-    this.m_rstate.setStencilOp(fail, zfail, zpass);
+    const ls = this.m_opfs;
+    ls[0] = fail;
+    ls[1] = zfail;
+    ls[2] = zpass;
+    ls[3] = 1;
+    this.m_enabled = true;
+    if (this.m_rstate) this.m_rstate.setStencilOp(fail, zfail, zpass);
+  }
+
+  reset() {
+    this.m_depfs[1] = 0;
+    this.m_maskfs[1] = 0;
+    this.m_funcfs[3] = 0;
+    this.m_opfs[3] = 0;
+    this.m_enabled = false;
+  }
+
+  apply(rstate) {
+    if (rstate && this.m_enabled) {
+      if (this.m_depfs[1] > 0) {
+        rstate.setDepthTestEnable(this.m_depfs[0] > 0);
+      }
+
+      if (this.m_maskfs[1] > 0) {
+        rstate.setStencilMask(this.m_maskfs[0]);
+      }
+
+      const fs = this.m_funcfs;
+
+      if (fs[1] > 0) {
+        rstate.setStencilFunc(fs[0], fs[1], fs[2]);
+      }
+
+      const ps = this.m_opfs;
+
+      if (ps[1] > 0) {
+        rstate.setStencilOp(ps[0], ps[1], ps[2]);
+      }
+    }
   }
 
 }
@@ -36829,7 +36903,7 @@ RenderDrawMode.ARRAYS_LINE_STRIP = 6;
 RenderDrawMode.ARRAYS_POINTS = 7;
 RenderDrawMode.ELEMENTS_LINES = 8;
 RenderDrawMode.DISABLE = 0;
-exports.RenderDrawMode = RenderDrawMode; // blend mode
+exports.RenderDrawMode = RenderDrawMode;
 
 class RenderBlendMode {}
 

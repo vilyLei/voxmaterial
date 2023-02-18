@@ -1,5 +1,4 @@
 import IRendererScene from "../../vox/scene/IRendererScene";
-import { IMouseInteraction } from "../../cospace/voxengine/ui/IMouseInteraction";
 import IRenderTexture from "../../vox/render/texture/IRenderTexture";
 import { CoEntityLayouter } from "../../cospace/app/common/CoEntityLayouter";
 import { CoGeomDataType, CoDataFormat, CoGeomModelLoader } from "../../cospace/app/common/CoGeomModelLoader";
@@ -13,7 +12,6 @@ import VoxRuntime from "../../common/VoxRuntime";
 export class DemoShaderMaterial {
 
 	private m_rscene: IRendererScene = null;
-	private m_mouseInteraction: IMouseInteraction = null;
 	private m_modelLoader = new CoGeomModelLoader();
 	private m_layouter = new CoEntityLayouter();
 	constructor() { }
@@ -36,7 +34,7 @@ export class DemoShaderMaterial {
 			material.setFragShaderCode(ShaderCode.frag_body);
 			material.setVtxShaderCode(ShaderCode.vert_body);
 			material.addUniformDataAt("u_color", new Float32Array([1.0, 1.0, 1.0, 1.0]));
-			material.setTextureList([ this.getTexByUrl("static/assets/metal_01.png") ]);
+			material.setTextureList([this.getTexByUrl("static/assets/metal_01.png")]);
 
 			let matrix4 = VoxRScene.createMat4(transform);
 			let entity = VoxRScene.createDisplayEntityFromModel(model, material);
@@ -59,9 +57,9 @@ export class DemoShaderMaterial {
 				this.m_layouter.layoutUpdate();
 			});
 
-		let baseUrl = "static/private/";
+		let baseUrl = "static/assets/";
 		let url = baseUrl + "fbx/base4.fbx";
-		// url = baseUrl + "obj/apple_01.obj";
+		// url = baseUrl + "obj/apple.obj";
 
 		this.loadModels([url]);
 	}
@@ -72,14 +70,9 @@ export class DemoShaderMaterial {
 		return VoxRScene.isEnabled();
 	}
 	private initUserInteract(): void {
-
-		let r = this.m_rscene;
-		if (r != null && this.m_mouseInteraction == null && VoxUIInteraction.isEnabled()) {
-
-			this.m_mouseInteraction = VoxUIInteraction.createMouseInteraction();
-			this.m_mouseInteraction.initialize(this.m_rscene, 0, true);
-			this.m_mouseInteraction.setSyncLookAtEnabled(true);
-		}
+		let mi = VoxUIInteraction.createMouseInteraction();
+		mi.initialize(this.m_rscene, 0, true);
+		mi.setAutoRunning(true);
 	}
 
 	private getTexByUrl(url: string = ""): IRenderTexture {
@@ -110,10 +103,6 @@ export class DemoShaderMaterial {
 	}
 	run(): void {
 		if (this.m_rscene != null) {
-			if (this.m_mouseInteraction != null) {
-				this.m_mouseInteraction.setLookAtPosition(null);
-				this.m_mouseInteraction.run();
-			}
 			this.m_rscene.run();
 		}
 	}

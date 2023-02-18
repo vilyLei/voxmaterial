@@ -5369,6 +5369,17 @@ const RendererInstance_1 = __importDefault(__webpack_require__("d958"));
 
 exports.RendererInstance = RendererInstance_1.default;
 
+const RenderConst_1 = __webpack_require__("e08e");
+
+exports.RenderDrawMode = RenderConst_1.RenderDrawMode;
+exports.RenderBlendMode = RenderConst_1.RenderBlendMode;
+exports.GLStencilFunc = RenderConst_1.GLStencilFunc;
+exports.GLStencilOp = RenderConst_1.GLStencilOp;
+exports.GLBlendMode = RenderConst_1.GLBlendMode;
+exports.GLBlendEquation = RenderConst_1.GLBlendEquation;
+exports.CullFaceMode = RenderConst_1.CullFaceMode;
+exports.DepthTestMode = RenderConst_1.DepthTestMode;
+
 function createRendererInstance() {
   return new RendererInstance_1.default();
 }
@@ -8228,13 +8239,25 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 class Stencil {
-  constructor(rstate) {
+  constructor(rstate = null) {
     this.m_rstate = null;
+    this.m_depfs = [0, 0];
+    this.m_maskfs = [0, 0];
+    this.m_funcfs = [0, 0, 0, 0];
+    this.m_opfs = [0, 0, 0, 0];
+    this.m_enabled = false;
     this.m_rstate = rstate;
   }
 
+  isEnabled() {
+    return this.m_enabled;
+  }
+
   setDepthTestEnable(enable) {
-    this.m_rstate.setDepthTestEnable(enable);
+    this.m_depfs[0] = enable ? 1 : 0;
+    this.m_depfs[1] = 1;
+    this.m_enabled = true;
+    if (this.m_rstate) this.m_rstate.setDepthTestEnable(enable);
   }
   /**
    * 设置 gpu stencilFunc 状态
@@ -8245,7 +8268,13 @@ class Stencil {
 
 
   setStencilFunc(func, ref, mask) {
-    this.m_rstate.setStencilFunc(func, ref, mask);
+    const ls = this.m_funcfs;
+    ls[0] = func;
+    ls[1] = ref;
+    ls[2] = mask;
+    ls[3] = 1;
+    this.m_enabled = true;
+    if (this.m_rstate) this.m_rstate.setStencilFunc(func, ref, mask);
   }
   /**
    * 设置 gpu stencilMask 状态
@@ -8254,7 +8283,10 @@ class Stencil {
 
 
   setStencilMask(mask) {
-    this.m_rstate.setStencilMask(mask);
+    this.m_maskfs[0] = mask;
+    this.m_maskfs[1] = 1;
+    this.m_enabled = true;
+    if (this.m_rstate) this.m_rstate.setStencilMask(mask);
   }
   /**
    * 设置 gpu stencilOp 状态
@@ -8265,7 +8297,45 @@ class Stencil {
 
 
   setStencilOp(fail, zfail, zpass) {
-    this.m_rstate.setStencilOp(fail, zfail, zpass);
+    const ls = this.m_opfs;
+    ls[0] = fail;
+    ls[1] = zfail;
+    ls[2] = zpass;
+    ls[3] = 1;
+    this.m_enabled = true;
+    if (this.m_rstate) this.m_rstate.setStencilOp(fail, zfail, zpass);
+  }
+
+  reset() {
+    this.m_depfs[1] = 0;
+    this.m_maskfs[1] = 0;
+    this.m_funcfs[3] = 0;
+    this.m_opfs[3] = 0;
+    this.m_enabled = false;
+  }
+
+  apply(rstate) {
+    if (rstate && this.m_enabled) {
+      if (this.m_depfs[1] > 0) {
+        rstate.setDepthTestEnable(this.m_depfs[0] > 0);
+      }
+
+      if (this.m_maskfs[1] > 0) {
+        rstate.setStencilMask(this.m_maskfs[0]);
+      }
+
+      const fs = this.m_funcfs;
+
+      if (fs[1] > 0) {
+        rstate.setStencilFunc(fs[0], fs[1], fs[2]);
+      }
+
+      const ps = this.m_opfs;
+
+      if (ps[1] > 0) {
+        rstate.setStencilOp(ps[0], ps[1], ps[2]);
+      }
+    }
   }
 
 }
@@ -13366,7 +13436,7 @@ RenderDrawMode.ARRAYS_LINE_STRIP = 6;
 RenderDrawMode.ARRAYS_POINTS = 7;
 RenderDrawMode.ELEMENTS_LINES = 8;
 RenderDrawMode.DISABLE = 0;
-exports.RenderDrawMode = RenderDrawMode; // blend mode
+exports.RenderDrawMode = RenderDrawMode;
 
 class RenderBlendMode {}
 
