@@ -2,7 +2,7 @@
 import { ModuleLoader } from "../cospace/modules/loaders/ModuleLoader";
 import { VoxRScene } from "../cospace/voxengine/VoxRScene";
 
-export default class VoxRuntime {
+export default class VoxModuleShell {
     constructor() { }
 
     initialize(interactCallback: () => void, rendererCallback: () => void, commonCallback: () => void = null): void {

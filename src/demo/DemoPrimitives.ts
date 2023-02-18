@@ -5,7 +5,7 @@ import { VoxEntity } from "../cospace/voxentity/VoxEntity";
 import { VoxMaterial } from "../cospace/voxmaterial/VoxMaterial";
 import { VoxMath } from "../cospace/math/VoxMath";
 import IRenderTexture from "../vox/render/texture/IRenderTexture";
-import VoxRuntime from "../common/VoxRuntime";
+import VoxModuleShell from "../common/VoxModuleShell";
 
 export class DemoPrimitives {
 
@@ -14,7 +14,7 @@ export class DemoPrimitives {
 
     initialize(): void {
 
-        new VoxRuntime().initialize(
+        new VoxModuleShell().initialize(
             (): void => { this.initMouseInteract(); },
             (): void => { this.initRenderer(); },
             (): void => { this.init3DScene(); }
@@ -71,6 +71,7 @@ export class DemoPrimitives {
 
         let coneMaterial = VoxMaterial.createDefaultMaterial();
         coneMaterial.normalEnabled = true;
+        coneMaterial.setRGB3f(0.5, 0.8, 0.2);
         let cone = VoxEntity.createCone(100, 150, 20, -0.5, coneMaterial);
         cone.setXYZ(300, 0, -300);
         this.m_rscene.addEntity(cone);

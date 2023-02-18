@@ -2,7 +2,7 @@ import IRendererScene from "../vox/scene/IRendererScene";
 import { IMouseInteraction } from "../cospace/voxengine/ui/IMouseInteraction";
 import { IVoxUIScene } from "../voxui/scene/IVoxUIScene";
 
-import VoxRuntime from "../common/VoxRuntime";
+import VoxModuleShell from "../common/VoxModuleShell";
 import { RendererDevice, VoxRScene } from "../cospace/voxengine/VoxRScene";
 import { VoxUIInteraction } from "../cospace/voxengine/ui/VoxUIInteraction";
 import { VoxMaterial } from "../cospace/voxmaterial/VoxMaterial";
@@ -25,7 +25,7 @@ export class DemoUIBase {
 	}
 
 	private initSysModule(): void {
-		let rt = new VoxRuntime();
+		let rt = new VoxModuleShell();
 		rt.initialize(
 			(): void => {
 				this.initUserInteract();

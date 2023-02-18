@@ -1,5 +1,5 @@
 import IRendererScene from "../vox/scene/IRendererScene";
-import VoxRuntime from "../common/VoxRuntime";
+import VoxModuleShell from "../common/VoxModuleShell";
 import { RendererDevice, VoxRScene } from "../cospace/voxengine/VoxRScene";
 import { VoxUIInteraction } from "../cospace/voxengine/ui/VoxUIInteraction";
 
@@ -16,7 +16,7 @@ export class DemoBase {
     }
 
     private initSysModule(): void {
-        new VoxRuntime().initialize(
+        new VoxModuleShell().initialize(
             (): void => { this.initUserInteract(); },
             (): void => { this.initRenderer(); }
         );

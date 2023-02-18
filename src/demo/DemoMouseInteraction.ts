@@ -1,14 +1,14 @@
 import IRendererScene from "../vox/scene/IRendererScene";
 import { VoxRScene } from "../cospace/voxengine/VoxRScene";
 import { VoxUIInteraction } from "../cospace/voxengine/ui/VoxUIInteraction";
-import VoxRuntime from "../common/VoxRuntime";
+import VoxModuleShell from "../common/VoxModuleShell";
 
 export class DemoMouseInteraction {
 
     private m_rscene: IRendererScene;
     constructor(){}
     initialize(): void {
-        new VoxRuntime().initialize(
+        new VoxModuleShell().initialize(
             (): void => { this.initMouseInteract(); },
             (): void => { this.initRenderer(); }
         );

@@ -15,7 +15,7 @@ import { VoxMath } from "../../cospace/math/VoxMath";
 import { VoxUI } from "../../voxui/VoxUI";
 
 import { ShaderCode } from "./ShaderCode";
-import VoxRuntime from "../../common/VoxRuntime";
+import VoxModuleShell from "../../common/VoxModuleShell";
 
 export class DemoParamCtrl {
 
@@ -30,7 +30,7 @@ export class DemoParamCtrl {
 
 		console.log("DemoParamCtrl::initialize()......");
 
-		let rt = new VoxRuntime();
+		let rt = new VoxModuleShell();
 		rt.initialize(
 			(): void => { this.initUserInteract(); },
 			(): void => { this.initRenderer(); },
@@ -54,8 +54,6 @@ export class DemoParamCtrl {
 			material.setTextureList([
 				this.getTexByUrl("static/assets/metal_01.png")
 			]);
-			let matrix4 = VoxRScene.createMat4(transform);
-			// let entity = this.createEntityWithMaterial(material, model, transform);
 			let entity = VoxRScene.createDisplayEntityFromModel(model, material);
 			// entity.setRenderState(VoxRScene.RendererState.NONE_CULLFACE_NORMAL_STATE);
 			this.m_entities.push(entity);
@@ -82,8 +80,8 @@ export class DemoParamCtrl {
 
 		let baseUrl = "static/assets/";
 		let url = baseUrl + "fbx/base4.fbx";
-		// url = baseUrl + "obj/apple.obj";
-		url = baseUrl + "fbx/mat_ball.fbx";
+		url = baseUrl + "obj/apple.obj";
+		// url = baseUrl + "fbx/mat_ball.fbx";
 
 		this.loadModels([url]);
 	}
@@ -92,10 +90,8 @@ export class DemoParamCtrl {
 	}
 
 	private initUI(): void {
-		VoxUI.initialize();
+		
 		let uisc = VoxUI.createUIScene(this.m_graph);
-		uisc.texAtlasNearestFilter = true;
-
 		this.initUIObjs(uisc);
 	}
 
@@ -139,8 +135,7 @@ export class DemoParamCtrl {
 
 			console.log("Y轴移动-B", info.values[0]);
 
-			let pv = VoxMath.createVec3();
-			entity1.getPosition(pv);
+			let pv = entity1.getPosition();
 			pv.y = info.values[0];
 			entity1.setPosition(pv);
 			entity1.update();
@@ -172,7 +167,7 @@ export class DemoParamCtrl {
 		mi.setAutoRunning(true);
 	}
 
-	private getTexByUrl(url: string = ""): IRenderTexture {
+	private getTexByUrl(url: string): IRenderTexture {
 		let sc = this.m_rscene;
 
 		let tex = sc.textureBlock.createImageTex2D(64, 64, false);

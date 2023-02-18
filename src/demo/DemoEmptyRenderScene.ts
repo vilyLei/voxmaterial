@@ -1,6 +1,6 @@
 import IRendererScene from "../vox/scene/IRendererScene";
 import { VoxRScene } from "../cospace/voxengine/VoxRScene";
-import VoxRuntime from "../common/VoxRuntime";
+import VoxModuleShell from "../common/VoxModuleShell";
 
 export class DemoEmptyRenderScene {
 
@@ -8,7 +8,7 @@ export class DemoEmptyRenderScene {
     constructor() { }
     
     initialize(): void {
-        new VoxRuntime().initialize(null, (): void => { this.initRenderer(); });
+        new VoxModuleShell().initialize(null, (): void => { this.initRenderer(); });
     }
     private initRenderer(): void {
         this.m_rscene = VoxRScene.createRendererScene();

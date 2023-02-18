@@ -7,7 +7,7 @@ import { VoxMaterial } from "../../cospace/voxmaterial/VoxMaterial";
 import { VoxUIInteraction } from "../../cospace/voxengine/ui/VoxUIInteraction";
 
 import { ShaderCode } from "./ShaderCode";
-import VoxRuntime from "../../common/VoxRuntime";
+import VoxModuleShell from "../../common/VoxModuleShell";
 
 export class DemoShaderMaterial {
 
@@ -19,7 +19,7 @@ export class DemoShaderMaterial {
 	initialize(): void {
 
 		console.log("DemoShaderMaterial::initialize()......");
-		let rt = new VoxRuntime();
+		let rt = new VoxModuleShell();
 		rt.initialize(
 			(): void => { this.initUserInteract(); },
 			(): void => { this.initRenderer(); },
