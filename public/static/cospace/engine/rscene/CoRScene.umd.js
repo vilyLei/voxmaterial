@@ -2938,9 +2938,7 @@ class MaterialBase {
     this.m_sharedUniforms = null;
     this.m_shaderUniformData = null;
     this.m_pipeLine = null;
-    this.m_uniqueShaderName = ""; // sub rendering pass
-
-    this.m_cases = null; // tex list unique hash value
+    this.m_uniqueShaderName = ""; // tex list unique hash value
 
     this.__$troMid = -1;
     this.__$uniform = null;
@@ -2949,21 +2947,10 @@ class MaterialBase {
      */
 
     this.pipeTypes = null;
-    this.renderState = 0;
-    this.multiPass = false;
     this.m_texList = null;
     this.m_texListLen = 0;
     this.m_texDataEnabled = false;
     this.m_attachCount = 0;
-  } // for multi - pass
-
-
-  setCases(ls) {
-    this.m_cases = ls;
-  }
-
-  getCases() {
-    return this.m_cases;
   }
   /*
    * specifies the scale factors and units to calculate depth values.
@@ -3011,8 +2998,13 @@ class MaterialBase {
   }
 
   hasShaderData() {
-    if (this.m_shdData) {
-      return this.m_shdData.haveTexture() ? this.texDataEnabled() : true;
+    if (this.m_shdData != null) {
+      return this.m_shdData.haveTexture() ? this.texDataEnabled() : true; // if (this.m_shdData.haveTexture()) {
+      //     return this.texDataEnabled();
+      // }
+      // else {
+      //     return true;
+      // }
     }
 
     return false;
@@ -3028,7 +3020,7 @@ class MaterialBase {
     if (this.m_shdData == null) {
       let buf = this.getCodeBuf();
 
-      if (buf) {
+      if (buf != null) {
         buf.reset();
         buf.pipeline = this.m_pipeLine;
         buf.pipeTypes = this.pipeTypes;
@@ -4567,7 +4559,7 @@ class RawCodeShaderBuffer extends ShaderCodeBuffer_1.default {
     return this.m_fragCode;
   }
 
-  setVertShaderCode(codeStr) {
+  setVtxShaderCode(codeStr) {
     this.m_vtxCode = codeStr;
   }
 
@@ -4593,7 +4585,6 @@ class ShaderMaterial extends MaterialBase_1.default {
     this.m_buffer = new RawCodeShaderBuffer();
     this.m_uniformData = null;
     this.m_shaderBuilder = null;
-    this.m_map = new Map();
     this.vertColorEnabled = false;
     this.premultiplyAlpha = false;
     this.shadowReceiveEnabled = false;
@@ -4627,9 +4618,9 @@ class ShaderMaterial extends MaterialBase_1.default {
     this.m_buffer.setFragShaderCode(codeStr);
   }
 
-  setVertShaderCode(codeStr) {
+  setVtxShaderCode(codeStr) {
     this.m_buffer.shaderBuilder = null;
-    this.m_buffer.setVertShaderCode(codeStr);
+    this.m_buffer.setVtxShaderCode(codeStr);
   }
   /**
    * @param           uniform_name        the name of a uniform in the shader.
@@ -4638,7 +4629,7 @@ class ShaderMaterial extends MaterialBase_1.default {
 
 
   addUniformDataAt(uniform_name, data) {
-    if (data != null && uniform_name != "") {
+    if (data != null) {
       if (this.m_uniformData == null) {
         this.m_uniformData = new ShaderUniformData_1.default();
         this.m_uniformData.uniformNameList = [];
@@ -4647,13 +4638,7 @@ class ShaderMaterial extends MaterialBase_1.default {
 
       this.m_uniformData.uniformNameList.push(uniform_name);
       this.m_uniformData.dataList.push(data);
-      this.m_map.set(uniform_name, data);
     }
-  }
-
-  getUniformDataAt(uniform_name) {
-    if (this.m_map.has(uniform_name)) return this.m_map.get(uniform_name);
-    return null;
   }
 
   getCodeBuf() {
@@ -7015,6 +7000,7 @@ class MouseEventEntity extends DisplayEntity_1.default {
   constructor(transform = null) {
     super(transform);
     this.m_dispatcher = null;
+    this.uuid = "";
     this.initializeEvent();
   }
 
@@ -11553,7 +11539,7 @@ class DisplayEntity {
      */
 
     this.__$rseFlag = RSEntityFlag_1.default.DEFAULT;
-    this.uuid = "";
+    this.name = "DisplayEntity";
     /**
      * 可见性裁剪是否开启, 如果不开启，则摄像机和遮挡剔除都不会裁剪, 取值于 SpaceCullingMask, 默认只会有摄像机裁剪
      */
@@ -11662,7 +11648,6 @@ class DisplayEntity {
   }
 
   getEvtDispatcher(evtClassType) {
-    if (this.uuid != "") this.m_eventDispatcher.uuid = this.uuid;
     return this.m_eventDispatcher;
   }
 
@@ -12108,7 +12093,7 @@ class DisplayEntity {
           this.__activeMesh(material); //  // for debug
 
 
-          this.m_display.uuid = this.uuid;
+          this.m_display.name = this.name;
         }
       }
     }
@@ -12352,7 +12337,7 @@ class DisplayEntity {
   }
 
   toString() {
-    return "DisplayEntity(uuid=" + this.uuid + ",uid = " + this.m_uid + ", rseFlag = " + this.__$rseFlag + ")";
+    return "DisplayEntity(name=" + this.name + ",uid = " + this.m_uid + ", rseFlag = " + this.__$rseFlag + ")";
   }
 
 }
@@ -15436,8 +15421,8 @@ class TextureBlock {
     }
   }
   /**
-   * 设置当前的渲染器代理
-   * @param renderProxy 当前的渲染器代理
+   * 设置当前的渲染器
+   * @param renderProxy 当前的渲染器
    */
 
 
@@ -15466,11 +15451,11 @@ class TextureBlock {
     return tex;
   }
 
-  createImageTex2D(w = 64, h = 64, powerof2Boo = false) {
+  createImageTex2D(pw, ph, powerof2Boo = false) {
     let tex = this.m_texPool.getTexture(TextureProxyType_1.TextureProxyType.Image);
 
     if (tex == null) {
-      tex = new ImageTextureProxy_1.default(w, h, powerof2Boo);
+      tex = new ImageTextureProxy_1.default(pw, ph, powerof2Boo);
     }
 
     tex.__$setRenderProxy(this.m_renderProxy);
@@ -15516,11 +15501,11 @@ class TextureBlock {
     return new FloatCubeTextureProxy_1.default(pw, ph);
   }
 
-  createBytesTex(w, h) {
+  createBytesTex(texW, texH) {
     let tex = this.m_texPool.getTexture(TextureProxyType_1.TextureProxyType.Bytes);
 
     if (tex == null) {
-      tex = new BytesTextureProxy_1.default(w, h);
+      tex = new BytesTextureProxy_1.default(texW, texH);
     }
 
     tex.__$setRenderProxy(this.m_renderProxy);
@@ -15528,28 +15513,28 @@ class TextureBlock {
     return tex;
   }
 
-  createBytesCubeTex(w, h) {
-    let tex = new BytesCubeTextureProxy_1.default(w, h);
+  createBytesCubeTex(texW, texH) {
+    let tex = new BytesCubeTextureProxy_1.default(texW, texH);
 
     tex.__$setRenderProxy(this.m_renderProxy);
 
     return tex;
   }
 
-  createImageCubeTex(w = 64, h = 64) {
-    let tex = new ImageCubeTextureProxy_1.default(w, h);
+  createImageCubeTex(texW, texH) {
+    let tex = new ImageCubeTextureProxy_1.default(texW, texH);
 
     tex.__$setRenderProxy(this.m_renderProxy);
 
     return tex;
   }
 
-  createTex3D(w, h, depth = 1) {
+  createTex3D(texW, texH, depth = 1) {
     if (depth < 1) {
       depth = 1;
     }
 
-    let tex = new Texture3DProxy_1.default(w, h, depth);
+    let tex = new Texture3DProxy_1.default(texW, texH, depth);
 
     tex.__$setRenderProxy(this.m_renderProxy);
 
@@ -15578,6 +15563,7 @@ class TextureBlock {
 
     tex.__$setRenderProxy(this.m_renderProxy);
 
+    return tex;
     return tex;
   }
 
@@ -20624,25 +20610,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 class Stencil {
-  constructor(rstate = null) {
+  constructor(rstate) {
     this.m_rstate = null;
-    this.m_depfs = [0, 0];
-    this.m_maskfs = [0, 0];
-    this.m_funcfs = [0, 0, 0, 0];
-    this.m_opfs = [0, 0, 0, 0];
-    this.m_enabled = false;
     this.m_rstate = rstate;
   }
 
-  isEnabled() {
-    return this.m_enabled;
-  }
-
   setDepthTestEnable(enable) {
-    this.m_depfs[0] = enable ? 1 : 0;
-    this.m_depfs[1] = 1;
-    this.m_enabled = true;
-    if (this.m_rstate) this.m_rstate.setDepthTestEnable(enable);
+    this.m_rstate.setDepthTestEnable(enable);
   }
   /**
    * 设置 gpu stencilFunc 状态
@@ -20653,13 +20627,7 @@ class Stencil {
 
 
   setStencilFunc(func, ref, mask) {
-    const ls = this.m_funcfs;
-    ls[0] = func;
-    ls[1] = ref;
-    ls[2] = mask;
-    ls[3] = 1;
-    this.m_enabled = true;
-    if (this.m_rstate) this.m_rstate.setStencilFunc(func, ref, mask);
+    this.m_rstate.setStencilFunc(func, ref, mask);
   }
   /**
    * 设置 gpu stencilMask 状态
@@ -20668,10 +20636,7 @@ class Stencil {
 
 
   setStencilMask(mask) {
-    this.m_maskfs[0] = mask;
-    this.m_maskfs[1] = 1;
-    this.m_enabled = true;
-    if (this.m_rstate) this.m_rstate.setStencilMask(mask);
+    this.m_rstate.setStencilMask(mask);
   }
   /**
    * 设置 gpu stencilOp 状态
@@ -20682,45 +20647,7 @@ class Stencil {
 
 
   setStencilOp(fail, zfail, zpass) {
-    const ls = this.m_opfs;
-    ls[0] = fail;
-    ls[1] = zfail;
-    ls[2] = zpass;
-    ls[3] = 1;
-    this.m_enabled = true;
-    if (this.m_rstate) this.m_rstate.setStencilOp(fail, zfail, zpass);
-  }
-
-  reset() {
-    this.m_depfs[1] = 0;
-    this.m_maskfs[1] = 0;
-    this.m_funcfs[3] = 0;
-    this.m_opfs[3] = 0;
-    this.m_enabled = false;
-  }
-
-  apply(rstate) {
-    if (rstate && this.m_enabled) {
-      if (this.m_depfs[1] > 0) {
-        rstate.setDepthTestEnable(this.m_depfs[0] > 0);
-      }
-
-      if (this.m_maskfs[1] > 0) {
-        rstate.setStencilMask(this.m_maskfs[0]);
-      }
-
-      const fs = this.m_funcfs;
-
-      if (fs[1] > 0) {
-        rstate.setStencilFunc(fs[0], fs[1], fs[2]);
-      }
-
-      const ps = this.m_opfs;
-
-      if (ps[1] > 0) {
-        rstate.setStencilOp(ps[0], ps[1], ps[2]);
-      }
-    }
+    this.m_rstate.setStencilOp(fail, zfail, zpass);
   }
 
 }
@@ -26860,7 +26787,7 @@ class DisplayEntityContainer {
 
     this.__$parent = null;
     this.__$renderer = null;
-    this.uuid = ""; // mouse interaction enabled
+    this.name = "DisplayEntityContainer"; // mouse interaction enabled
 
     this.mouseEnabled = false;
     this.m_entities = [];
@@ -35176,7 +35103,7 @@ class RODisplay {
     this.m_material = null; // 只是持有引用不做任何管理操作
 
     this.m_matFS32 = null;
-    this.uuid = ""; // render yes or no
+    this.name = "RODisplay"; // render yes or no
 
     this.visible = true;
     this.ivsIndex = 0;
@@ -35296,7 +35223,7 @@ class RODisplay {
   }
 
   toString() {
-    return "RODisplay(uuid=" + this.uuid + ",uid=" + this.getUid() + ", __$ruid=" + this.__$ruid + ")";
+    return "RODisplay(name=" + this.name + ",uid=" + this.getUid() + ", __$ruid=" + this.__$ruid + ")";
   }
 
   destroy() {
@@ -36911,7 +36838,7 @@ RenderDrawMode.ARRAYS_LINE_STRIP = 6;
 RenderDrawMode.ARRAYS_POINTS = 7;
 RenderDrawMode.ELEMENTS_LINES = 8;
 RenderDrawMode.DISABLE = 0;
-exports.RenderDrawMode = RenderDrawMode;
+exports.RenderDrawMode = RenderDrawMode; // blend mode
 
 class RenderBlendMode {}
 

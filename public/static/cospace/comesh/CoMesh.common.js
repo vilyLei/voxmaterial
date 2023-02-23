@@ -582,7 +582,9 @@ class TorusMeshBuilder extends MeshBuilder_1.MeshBuilder {
     this.uScale = 1.0;
     this.vScale = 1.0;
     /**
-     * 0: vertical to x-axis, 1: vertical to y-axis, 2: vertical to z-axis, the default value is 0
+     * axisType = 0 is XOY plane,
+     * axisType = 1 is XOZ plane,
+     * axisType = 2 is YOZ plane
      */
 
     this.axisType = 0;
@@ -738,7 +740,9 @@ class CoGeometry {
     this.vtCount = 0;
     this.bounds = null;
     /**
-     * 0: vertical to x-axis, 1: vertical to y-axis, 2: vertical to z-axis, the default value is 0
+     * axisType = 0 is XOY plane,
+     * axisType = 1 is XOZ plane,
+     * axisType = 2 is YOZ plane
      */
 
     this.axisType = 0;
